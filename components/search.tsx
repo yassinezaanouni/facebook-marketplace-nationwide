@@ -76,29 +76,22 @@ export default function Search() {
   }
 
   const getEbayConditionValue = (condition: string): string => {
-    switch (condition) {
-      case "new":
-        return "1000"
-      case "used_like_new":
-      case "used_good":
-      case "used_fair":
-        return "3000"
-      default:
-        return ""
+    const conditionMap: Record<string, string> = {
+      new: "1000",
+      open_box: "1500",
+      refurbished: "2010|2020|2030",
+      used: "3000",
     }
+    return conditionMap[condition] || ""
   }
 
   const getAmazonConditionValue = (condition: string): string => {
-    switch (condition) {
-      case "new":
-        return "new"
-      case "used_like_new":
-      case "used_good":
-      case "used_fair":
-        return "used"
-      default:
-        return ""
+    const conditionMap: Record<string, string> = {
+      used: "used",
+      renewed: "certified-refurbished",
+      new: "new",
     }
+    return conditionMap[condition] || ""
   }
 
   const buildSearchURL = (marketplace: MarketplaceConfig) => {
@@ -121,31 +114,41 @@ export default function Search() {
     if (selectedConditions.length > 0) {
       switch (marketplace.name) {
         case "Facebook Marketplace":
-          if (selectedConditions.length > 0) {
-            searchURL += `&itemCondition=${selectedConditions.join("%2C")}`
+          const fbConditions = selectedConditions.filter(
+            (c) =>
+              siteConfig.filters.itemCondition.facebook[
+                c as keyof typeof siteConfig.filters.itemCondition.facebook
+              ]
+          )
+          if (fbConditions.length > 0) {
+            searchURL += `&itemCondition=${fbConditions.join("%2C")}`
           }
           break
 
         case "eBay":
         case "eBay (Sold)":
-          const ebayConditions = Array.from(
-            new Set(
-              selectedConditions.map(getEbayConditionValue).filter(Boolean)
-            )
-          )
-          ebayConditions.forEach((condition) => {
-            searchURL += `&LH_ItemCondition=${condition}`
-          })
+          const ebayConditions = selectedConditions
+            .map(getEbayConditionValue)
+            .filter(Boolean)
+
+          if (ebayConditions.length > 0) {
+            searchURL += `&LH_ItemCondition=${ebayConditions.join("|")}`
+          }
           break
 
         case "Amazon":
-          const amazonConditions = Array.from(
-            new Set(
-              selectedConditions.map(getAmazonConditionValue).filter(Boolean)
+          const amazonConditions = selectedConditions
+            .filter(
+              (c) =>
+                siteConfig.filters.itemCondition.amazon[
+                  c as keyof typeof siteConfig.filters.itemCondition.amazon
+                ]
             )
-          )
+            .map(getAmazonConditionValue)
+            .filter(Boolean)
+
           if (amazonConditions.length > 0) {
-            searchURL += `&condition=${amazonConditions.join(",")}`
+            searchURL += `&rh=n%3A172282%2Cp_n_condition-type%3A${amazonConditions.join("%2C")}`
           }
           break
       }
@@ -318,8 +321,15 @@ export default function Search() {
           <div className="bg-primary/3 sm:mb-4 rounded-xl w-full p-6 m-1 mb-2">
             <div className="mb-4 text-base font-medium">Item Condition</div>
             <div className="md:grid-cols-4 grid grid-cols-2 gap-4">
-              {Object.entries(siteConfig.filters.itemCondition).map(
-                ([key, label]) => (
+              {selectedMarketplace &&
+                Object.entries(
+                  siteConfig.filters.itemCondition[
+                    selectedMarketplace.replace(
+                      "_sold",
+                      ""
+                    ) as keyof typeof siteConfig.filters.itemCondition
+                  ]
+                ).map(([key, label]) => (
                   <div key={key}>
                     <label className="flex items-center space-x-3 cursor-pointer">
                       <Checkbox
@@ -333,8 +343,7 @@ export default function Search() {
                       <span className="text-sm">{label}</span>
                     </label>
                   </div>
-                )
-              )}
+                ))}
             </div>
           </div>
 

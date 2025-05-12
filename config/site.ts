@@ -25,10 +25,23 @@ export const siteConfig = {
     minPrice: "minPrice",
     maxPrice: "maxPrice",
     itemCondition: {
-      new: "New",
-      used_like_new: "Used Like New",
-      used_good: "Used Good",
-      used_fair: "Used Fair",
+      facebook: {
+        new: "New",
+        used_like_new: "Used Like New",
+        used_good: "Used Good",
+        used_fair: "Used Fair",
+      },
+      ebay: {
+        new: "New",
+        open_box: "Open box",
+        refurbished: "eBay Refurbished",
+        used: "Used",
+      },
+      amazon: {
+        new: "New",
+        renewed: "Renewed",
+        used: "Used",
+      },
     },
     defaultAvailability: "in stock",
     availability: {
