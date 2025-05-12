@@ -12,7 +12,7 @@ import { ThemeToggle } from "@/components/theme-toggle"
 
 export function SiteHeader() {
   return (
-    <header className="bg-background absolute top-0 z-40 w-full border-b">
+    <header className="bg-background absolute top-0 z-40 w-full py-2 border-b">
       <div className="sm:justify-between sm:space-x-0 container flex items-center h-16 space-x-4">
         <div className="md:gap-10 flex gap-6">
           <div>

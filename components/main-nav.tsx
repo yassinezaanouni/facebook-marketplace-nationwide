@@ -12,12 +12,13 @@ interface MainNavProps {
 
 export function MainNav({ items }: MainNavProps) {
   return (
-    <div className="flex gap-6 md:gap-10">
+    <div className="md:gap-10 flex gap-6">
       <Link href="/" className="flex items-center space-x-2">
-        {/*<Icons.logo className="h-6 w-6" />*/}
+        {/*<Icons.logo className="w-6 h-6" />*/}
         <span className="inline-block font-bold">{siteConfig.name}</span>
-        <h1 className="text-l font-extrabold leading-tight tracking-tighter md:text-2xl">
-          <span className="text-[hsl(215,100%,60%)]">Facebook Marketplace</span> Nationwide Search
+        <h1 className="text-l md:text-2xl font-extrabold leading-tight tracking-tighter">
+          <span className="text-[hsl(215,100%,60%)]">Facebook Marketplace</span>{" "}
+          Nationwide Search
         </h1>
       </Link>
       {items?.length ? (

@@ -23,6 +23,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 
+import ProfitCalculator from "./ProfitCalculator"
 import { Label } from "./ui/label"
 
 ReactGA.initialize(process.env.NEXT_PUBLIC_GA4_ANALYTICS_ID)
@@ -254,7 +255,7 @@ export default function Search() {
   )
 
   return (
-    <>
+    <div className="md:flex-row container flex flex-col gap-6 pt-20 pb-40">
       <div className="flex flex-col w-full">
         {device === "Mobile" && !!resultLinks.length && (
           <div className="inline-block mb-8 text-lg">
@@ -265,10 +266,10 @@ export default function Search() {
             {resultLinks}
           </div>
         )}
-        <div className=" flex gap-4">
+        <div className="flex gap-4">
           <Input
             id="search"
-            className="search text-primary caret-secondary py-6 text-3xl"
+            className="search text-primary py-6 !text-xl"
             type="text"
             value={searchTerm}
             onChange={updateSearchTerm}
@@ -276,16 +277,18 @@ export default function Search() {
             placeholder="Search for..."
             autoFocus
           />
-          <Button
-            className=" uppercase cursor-pointer"
-            onClick={doSearch}
-            disabled={!selectedMarketplace || !searchTerm.trim()}
-          >
-            Search
-          </Button>
+          <div>
+            <Button
+              className="min-w-40 !h-full uppercase cursor-pointer"
+              onClick={doSearch}
+              disabled={!selectedMarketplace || !searchTerm.trim()}
+            >
+              Search
+            </Button>
+          </div>
         </div>
         <div className=" flex flex-row flex-wrap mt-4">
-          <div className="bg-primary/3 sm:mb-4 rounded-xl w-full p-6 m-1 mb-2">
+          <div className="bg-primary/3 sm:mb-6 rounded-xl w-full p-6 mb-2">
             <div className="mb-4 text-base font-medium">Select Marketplace</div>
             <RadioGroup
               value={selectedMarketplace}
@@ -321,7 +324,7 @@ export default function Search() {
             </RadioGroup>
           </div>
 
-          <div className="bg-primary/3 sm:mb-4 rounded-xl w-full p-6 m-1 mb-2">
+          <div className="bg-primary/3 sm:mb-6 rounded-xl w-full p-6 mb-2">
             <div className="mb-4 text-base font-medium">Item Condition</div>
             <div className="md:grid-cols-4 grid grid-cols-2 gap-4">
               {selectedMarketplace &&
@@ -350,7 +353,7 @@ export default function Search() {
             </div>
           </div>
 
-          <div className="bg-primary/3 sm:flex-row rounded-xl flex flex-col w-full gap-6 p-6 m-1 mb-4">
+          <div className="bg-primary/3 sm:flex-row rounded-xl flex flex-col w-full gap-6 p-6">
             <label className="flex-1">
               <span className="block mb-2 text-base font-medium">
                 Min. Price
@@ -384,6 +387,7 @@ export default function Search() {
           </div>
         </div>
       </div>
-    </>
+      <ProfitCalculator />
+    </div>
   )
 }
