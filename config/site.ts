@@ -19,18 +19,9 @@ export const siteConfig = {
     defaultDeliveryMethod: "all",
     deliveryMethod: {
       all: "All",
-      local_pick_up: "Local Pickup",
-      shipping: "Shipping",
     },
     radius: "radius",
     defaultSortBy: "best_match",
-    sortBy: {
-      best_match: "Suggested",
-      distance_ascend: "Distance: Nearest first",
-      creation_time_descend: "Date Listed: Newest first",
-      price_ascend: "Price: Lowest first",
-      price_descend: "Price: Highest first",
-    },
     minPrice: "minPrice",
     maxPrice: "maxPrice",
     itemCondition: {
@@ -42,14 +33,10 @@ export const siteConfig = {
     defaultAvailability: "in stock",
     availability: {
       "in stock": "Available",
-      "out of stock": "Sold",
     },
     defaultDaysSinceListed: "0",
     daysSinceListed: {
       "0": "All",
-      "1": "Last 24 hours",
-      "7": "Last 7 days",
-      "30": "Last 30 days",
     },
   },
   templateURL: {

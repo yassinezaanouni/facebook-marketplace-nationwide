@@ -41,16 +41,6 @@ export default function Search() {
   )
   const [minPrice, setMinPrice] = useState("")
   const [maxPrice, setMaxPrice] = useState("")
-  const [sortBy, setSortBy] = useState(siteConfig.filters.defaultSortBy)
-  const [availability, setAvailability] = useState(
-    siteConfig.filters.defaultAvailability
-  )
-  const [deliveryMethod, setDeliveryMethod] = useState(
-    siteConfig.filters.defaultDeliveryMethod
-  )
-  const [daysSinceListed, setDaysSinceListed] = useState(
-    siteConfig.filters.defaultDaysSinceListed
-  )
   const [resultLinks, setResultLinks] = useState<any[]>([])
   const itemConditionInitialState: Record<string, boolean> = {}
   Object.keys(siteConfig.filters.itemCondition).map((key) => {
@@ -61,15 +51,8 @@ export default function Search() {
   const device = useDeviceDetection()
 
   const countriesData: Defs.Countries = siteConfig.countries
-  const filterSortBy: Defs.FilterSortBy = siteConfig.filters.sortBy
   const filterItemCondition: Defs.FilterItemCondition =
     siteConfig.filters.itemCondition
-  const filterAvailability: Defs.FilterAvailability =
-    siteConfig.filters.availability
-  const filterDeliveryMethod: Defs.FilterDeliveryMethod =
-    siteConfig.filters.deliveryMethod
-  const filterDaysSinceListed: Defs.FilterDaysSinceListed =
-    siteConfig.filters.daysSinceListed
 
   const updateSearchTerm = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value)
@@ -104,8 +87,7 @@ export default function Search() {
       if (!!minPrice) searchURL += "&minPrice=" + minPrice
       if (!!maxPrice) searchURL += "&maxPrice=" + maxPrice
 
-      if (sortBy !== siteConfig.filters.defaultSortBy)
-        searchURL += "&sortBy=" + sortBy
+      searchURL += "&sortBy=" + siteConfig.filters.defaultSortBy
 
       let itemConditionStatus: any[] = []
       Object.keys(itemCondition).map((itemKey) => {
@@ -114,13 +96,10 @@ export default function Search() {
       if (itemConditionStatus.length)
         searchURL += "&itemCondition=" + itemConditionStatus.join(",")
 
-      if (availability !== siteConfig.filters.defaultAvailability)
-        searchURL += "&availability=" + availability
-
-      searchURL += "&deliveryMethod=" + deliveryMethod
-
-      if (daysSinceListed !== siteConfig.filters.defaultDaysSinceListed)
-        searchURL += "&daysSinceListed=" + daysSinceListed
+      searchURL += "&availability=" + siteConfig.filters.defaultAvailability
+      searchURL += "&deliveryMethod=" + siteConfig.filters.defaultDeliveryMethod
+      searchURL +=
+        "&daysSinceListed=" + siteConfig.filters.defaultDaysSinceListed
 
       if (device !== "Mobile") {
         if (searchThrottle) {
@@ -176,13 +155,9 @@ export default function Search() {
     device,
     searchTerm,
     countriesData,
-    sortBy,
     itemCondition,
-    availability,
-    daysSinceListed,
     minPrice,
     maxPrice,
-    deliveryMethod,
     searchThrottle,
   ])
 
@@ -207,7 +182,6 @@ export default function Search() {
               Results for &quot;{lastSearchTerm}&quot;
             </div>
             <div className="mb-2 text-sm">
-              {" "}
               500 {countriesData["usa"].locale} radius of:
             </div>
             {resultLinks}
@@ -232,107 +206,6 @@ export default function Search() {
           </Button>
         </div>
         <div className="fontSans flex flex-row flex-wrap mt-4">
-          <label className="sm:mb-4 sm:w-1/4 w-full mb-1 text-xs">
-            <div className="bg-primary/5 p-2 m-1 rounded">
-              Sort By &nbsp;
-              <Select
-                name="sort_by"
-                onValueChange={setSortBy}
-                defaultValue={siteConfig.filters.defaultSortBy}
-              >
-                <SelectTrigger className="text-primary p-0 mt-1 bg-transparent cursor-pointer">
-                  <SelectValue placeholder="Sort By" />
-                </SelectTrigger>
-                <SelectContent>
-                  {Object.keys(filterSortBy).map((sortKey) => (
-                    <SelectItem
-                      className="cursor-pointer"
-                      key={sortKey}
-                      value={sortKey}
-                    >
-                      {filterSortBy[sortKey]}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </label>
-          <label className="sm:mb-4 sm:w-1/4 w-full mb-1 text-xs">
-            <div className="bg-primary/5 p-2 m-1 rounded">
-              Days Since Listed &nbsp;
-              <Select
-                name="daysSinceListed"
-                onValueChange={setDaysSinceListed}
-                defaultValue={siteConfig.filters.defaultDaysSinceListed}
-              >
-                <SelectTrigger className="text-primary focus-visible:outline-none p-0 mt-1 bg-transparent cursor-pointer">
-                  <SelectValue placeholder="Days Since Listed" />
-                </SelectTrigger>
-                <SelectContent>
-                  {Object.keys(filterDaysSinceListed).map((daysKey) => (
-                    <SelectItem
-                      className="cursor-pointer"
-                      key={daysKey}
-                      value={daysKey}
-                    >
-                      {filterDaysSinceListed[daysKey]}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </label>
-          <label className="sm:mb-4 sm:w-1/4 w-full mb-1 text-xs">
-            <div className="bg-primary/5 p-2 m-1 rounded">
-              Availability &nbsp;
-              <Select
-                name="availability"
-                onValueChange={setAvailability}
-                defaultValue={siteConfig.filters.defaultAvailability}
-              >
-                <SelectTrigger className="text-primary focus-visible:outline-none p-0 mt-1 bg-transparent cursor-pointer">
-                  <SelectValue placeholder="Availability" />
-                </SelectTrigger>
-                <SelectContent>
-                  {Object.keys(filterAvailability).map((availKey) => (
-                    <SelectItem
-                      className="cursor-pointer"
-                      key={availKey}
-                      value={availKey}
-                    >
-                      {filterAvailability[availKey]}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </label>
-          <label className="sm:mb-4 sm:w-1/4 w-full mb-1 text-xs">
-            <div className="bg-primary/5 p-2 m-1 rounded">
-              Delivery &nbsp;
-              <Select
-                name="delivery"
-                onValueChange={setDeliveryMethod}
-                defaultValue={siteConfig.filters.defaultDeliveryMethod}
-              >
-                <SelectTrigger className="text-primary focus-visible:outline-none p-0 mt-1 bg-transparent cursor-pointer">
-                  <SelectValue placeholder="Delivery" />
-                </SelectTrigger>
-                <SelectContent>
-                  {Object.keys(filterDeliveryMethod).map((deliveryKey) => (
-                    <SelectItem
-                      className="cursor-pointer"
-                      key={deliveryKey}
-                      value={deliveryKey}
-                    >
-                      {filterDeliveryMethod[deliveryKey]}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          </label>
-          <span className="w-full h-0"></span>
           <div className="bg-primary/5 sm:mb-4 w-full p-2 m-1 mb-2 text-xs rounded">
             <div className="mb-3">Condition</div>
             <div className="w-full h-0"></div>
