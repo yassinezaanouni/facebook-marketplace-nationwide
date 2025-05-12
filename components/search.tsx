@@ -8,30 +8,33 @@ import {
   useEffect,
   useState,
 } from "react"
+import Image from "next/image"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
 import ReactGA from "react-ga4"
 
 import { siteConfig } from "@/config/site"
 import * as Defs from "@/lib/defs"
+import useDeviceDetection from "@/lib/device"
 import { TimedQueue } from "@/lib/timed-queue"
 import { cn } from "@/lib/utils"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 
-import "@/styles/components/select.css"
-
-import useDeviceDetection from "@/lib/device"
+import { Label } from "./ui/label"
 
 ReactGA.initialize(process.env.NEXT_PUBLIC_GA4_ANALYTICS_ID)
+
+interface MarketplaceConfig {
+  name: string
+  icon: string
+  templateURL: string
+  searchParams: {
+    [key: string]: string
+  }
+}
 
 export default function Search() {
   const [searchTerm, setSearch] = useState("")
@@ -47,12 +50,10 @@ export default function Search() {
     itemConditionInitialState[key] = false
   })
   const [itemCondition, setItemCondition] = useState(itemConditionInitialState)
+  const [selectedMarketplace, setSelectedMarketplace] = useState<string>("")
 
   const device = useDeviceDetection()
-
-  const countriesData: Defs.Countries = siteConfig.countries
-  const filterItemCondition: Defs.FilterItemCondition =
-    siteConfig.filters.itemCondition
+  const marketplaces = siteConfig.marketplaces
 
   const updateSearchTerm = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value)
@@ -70,74 +71,88 @@ export default function Search() {
     setItemCondition(updatedListOfItems)
   }
 
+  const updateMarketplace = (value: string) => {
+    setSelectedMarketplace(value)
+  }
+
+  const buildSearchURL = (marketplace: MarketplaceConfig) => {
+    let searchURL = marketplace.templateURL.replace("|STRING|", searchTerm)
+
+    // Add marketplace-specific search parameters
+    if (minPrice && marketplace.searchParams.minPrice) {
+      searchURL += `&${marketplace.searchParams.minPrice}=${minPrice}`
+    }
+    if (maxPrice && marketplace.searchParams.maxPrice) {
+      searchURL += `&${marketplace.searchParams.maxPrice}=${maxPrice}`
+    }
+
+    // Add other marketplace-specific parameters
+    Object.entries(marketplace.searchParams).forEach(([key, value]) => {
+      if (!["minPrice", "maxPrice"].includes(key)) {
+        searchURL += `&${key}=${value}`
+      }
+    })
+
+    return searchURL
+  }
+
   const doSearch = useCallback(() => {
     if (searchTerm.trim() === "") return
-    let citiesFb = countriesData["usa"].cities_fb
-    let locale: string = countriesData["usa"].locale
+
+    // Check if a marketplace is selected
+    if (!selectedMarketplace) return
+
     let jobQueue: TimedQueue = new TimedQueue()
     let linksHTML: any[] = []
 
-    citiesFb.forEach((city, cityIdx) => {
-      let searchURL = siteConfig.templateURL[
-        locale as keyof typeof siteConfig.templateURL
-      ]
-        .replace("|CITY|", city)
-        .replace("|STRING|", searchTerm)
+    // Handle the selected marketplace
+    const marketplace =
+      marketplaces[selectedMarketplace as keyof typeof marketplaces]
+    const searchURL = buildSearchURL(marketplace)
 
-      if (!!minPrice) searchURL += "&minPrice=" + minPrice
-      if (!!maxPrice) searchURL += "&maxPrice=" + maxPrice
-
-      searchURL += "&sortBy=" + siteConfig.filters.defaultSortBy
-
-      let itemConditionStatus: any[] = []
-      Object.keys(itemCondition).map((itemKey) => {
-        if (itemCondition[itemKey]) itemConditionStatus.push(itemKey)
-      })
-      if (itemConditionStatus.length)
-        searchURL += "&itemCondition=" + itemConditionStatus.join(",")
-
-      searchURL += "&availability=" + siteConfig.filters.defaultAvailability
-      searchURL += "&deliveryMethod=" + siteConfig.filters.defaultDeliveryMethod
-      searchURL +=
-        "&daysSinceListed=" + siteConfig.filters.defaultDaysSinceListed
-
-      if (device !== "Mobile") {
-        if (searchThrottle) {
-          let jobMinDelay = searchThrottle - searchThrottle * 0.1
-          let jobMaxDelay = searchThrottle + searchThrottle * 0.1
-          jobQueue.addTask({
-            callback: () => {
-              window.open(searchURL, "fbmpusasearch" + city)
-            },
-            time: Math.ceil(
-              Math.random() * (jobMaxDelay - jobMinDelay) + jobMinDelay
-            ),
-          })
-        } else {
-          window.open(searchURL, "fbmpusasearch" + city)
-        }
+    if (device !== "Mobile") {
+      if (searchThrottle) {
+        let jobMinDelay = searchThrottle - searchThrottle * 0.1
+        let jobMaxDelay = searchThrottle + searchThrottle * 0.1
+        jobQueue.addTask({
+          callback: () => {
+            window.open(searchURL, selectedMarketplace)
+          },
+          time: Math.ceil(
+            Math.random() * (jobMaxDelay - jobMinDelay) + jobMinDelay
+          ),
+        })
+      } else {
+        window.open(searchURL, selectedMarketplace)
       }
+    }
 
-      linksHTML.push(
-        <Link
-          className=" px-2 my-0 cursor-pointer"
-          href={searchURL}
-          target={`fbmpusasearch${city}`}
+    linksHTML.push(
+      <Link
+        key={selectedMarketplace}
+        className="px-2 my-0 cursor-pointer"
+        href={searchURL}
+        target={selectedMarketplace}
+      >
+        <div
+          className={cn(
+            "mb-2 flex items-center gap-2",
+            buttonVariants({
+              size: "sm",
+              variant: "outline",
+            })
+          )}
         >
-          <div
-            className={cn(
-              "mb-2",
-              buttonVariants({
-                size: "sm",
-                variant: "outline",
-              })
-            )}
-          >
-            {countriesData["usa"].cities[cityIdx]}
-          </div>
-        </Link>
-      )
-    })
+          <Image
+            src={`/marketplaces/${marketplace.icon}`}
+            alt={marketplace.name}
+            width={16}
+            height={16}
+          />
+          <span>{marketplace.name}</span>
+        </div>
+      </Link>
+    )
 
     setLastSearchTerm(searchTerm)
     setResultLinks(linksHTML)
@@ -146,15 +161,16 @@ export default function Search() {
 
     ReactGA.event({
       category: "search",
-      action: "search_usa",
+      action: "search_multiple",
       label: searchTerm,
     })
     // @ts-ignore umami is defined in the global scope via the umami script
-    window.umami.track("search_usa", { searchTerm: searchTerm })
+    window.umami.track("search_multiple", { searchTerm: searchTerm })
   }, [
     device,
     searchTerm,
-    countriesData,
+    selectedMarketplace,
+    marketplaces,
     itemCondition,
     minPrice,
     maxPrice,
@@ -181,13 +197,11 @@ export default function Search() {
             <div className="text-primary mb-0 font-bold">
               Results for &quot;{lastSearchTerm}&quot;
             </div>
-            <div className="mb-2 text-sm">
-              500 {countriesData["usa"].locale} radius of:
-            </div>
+            <div className="mb-2 text-sm">Search results:</div>
             {resultLinks}
           </div>
         )}
-        <div className="fontSans flex flex-row">
+        <div className=" flex gap-4">
           <Input
             id="search"
             className="search text-primary caret-secondary py-6 text-3xl"
@@ -199,58 +213,100 @@ export default function Search() {
             autoFocus
           />
           <Button
-            className="px-8 my-0 ml-8 uppercase cursor-pointer"
+            className=" uppercase cursor-pointer"
             onClick={doSearch}
+            disabled={!selectedMarketplace || !searchTerm.trim()}
           >
             Search
           </Button>
         </div>
-        <div className="fontSans flex flex-row flex-wrap mt-4">
-          <div className="bg-primary/5 sm:mb-4 w-full p-2 m-1 mb-2 text-xs rounded">
-            <div className="mb-3">Condition</div>
-            <div className="w-full h-0"></div>
-            <div className="flex flex-row w-full">
-              {Object.keys(filterItemCondition).map((conditionKey: any) => (
-                <div key={conditionKey} className="w-1/4">
-                  <label className="peer-disabled:cursor-not-allowed peer-disabled:opacity-70 mr-4 text-sm font-medium leading-none cursor-pointer">
-                    <Checkbox
-                      name="condition"
-                      id={`condition_${conditionKey}`}
-                      className="mr-2 border-solid cursor-pointer"
-                      onCheckedChange={(checked) =>
-                        updateConditions(conditionKey, checked as boolean)
-                      }
-                    />
-                    <span className="">
-                      {filterItemCondition[conditionKey]}
+        <div className=" flex flex-row flex-wrap mt-4">
+          <div className="bg-primary/3 sm:mb-4 rounded-xl w-full p-6 m-1 mb-2">
+            <div className="mb-4 text-base font-medium">Select Marketplace</div>
+            <RadioGroup
+              value={selectedMarketplace}
+              onValueChange={updateMarketplace}
+              className="md:grid-cols-4 grid grid-cols-2 gap-4"
+            >
+              {Object.entries(marketplaces).map(([id, marketplace]) => (
+                <div key={id} className="relative">
+                  <RadioGroupItem
+                    value={id}
+                    id={`marketplace_${id}`}
+                    className="peer sr-only"
+                  />
+                  <Label
+                    htmlFor={`marketplace_${id}`}
+                    className="flex flex-col  items-center justify-center p-4 h-full rounded-lg border-2 border-muted bg-popover/50 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer transition-all"
+                  >
+                    <div className="mb-3">
+                      <Image
+                        src={`/marketplaces/${marketplace.icon}`}
+                        alt={marketplace.name}
+                        width={32}
+                        height={32}
+                        className="rounded-md"
+                      />
+                    </div>
+                    <span className="text-sm font-medium">
+                      {marketplace.name}
                     </span>
-                  </label>
+                  </Label>
                 </div>
               ))}
+            </RadioGroup>
+          </div>
+
+          <div className="bg-primary/3 sm:mb-4 rounded-xl w-full p-6 m-1 mb-2">
+            <div className="mb-4 text-base font-medium">Item Condition</div>
+            <div className="md:grid-cols-4 grid grid-cols-2 gap-4">
+              {Object.entries(siteConfig.filters.itemCondition).map(
+                ([key, label]) => (
+                  <div key={key}>
+                    <label className="flex items-center space-x-3 cursor-pointer">
+                      <Checkbox
+                        name="condition"
+                        id={`condition_${key}`}
+                        className="w-5 h-5"
+                        onCheckedChange={(checked) =>
+                          updateConditions(key, checked as boolean)
+                        }
+                      />
+                      <span className="text-sm">{label}</span>
+                    </label>
+                  </div>
+                )
+              )}
             </div>
           </div>
-          <span className="w-full h-0"></span>
-          <div className="bg-primary/5 flex flex-row w-full p-2 m-1 mb-4 text-xs rounded">
-            <label className="w-1/2">
-              <span className="w-1/3 mr-2 text-xs">Min. Price</span>
+
+          <div className="bg-primary/3 sm:flex-row rounded-xl flex flex-col w-full gap-6 p-6 m-1 mb-4">
+            <label className="flex-1">
+              <span className="block mb-2 text-base font-medium">
+                Min. Price
+              </span>
               <Input
-                className="prices text-primary caret-secondary flex-none w-2/3 h-8 p-1 mt-2 text-sm bg-transparent"
+                className="prices text-primary caret-secondary bg-popover h-10"
                 id="minPrice"
                 type="number"
                 min="0"
                 value={minPrice}
                 onChange={updateMinPrice}
+                placeholder="0"
               />
             </label>
-            <label className="w-1/2 ml-6">
-              <span className="w-1/3 mr-2 text-xs">Max. Price</span>
+            <label className="flex-1">
+              <span className="block mb-2 text-base font-medium">
+                Max. Price
+              </span>
               <Input
-                className="prices text-primary caret-secondary flex-none w-2/3 h-8 p-1 mt-2 text-sm bg-transparent"
+                className="prices text-primary caret-secondary bg-popover h-10"
                 id="maxPrice"
                 type="number"
                 min="0"
                 value={maxPrice}
                 onChange={updateMaxPrice}
+                placeholder="No limit"
               />
             </label>
           </div>

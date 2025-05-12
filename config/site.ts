@@ -2,9 +2,9 @@ export type SiteConfig = typeof siteConfig
 
 export const siteConfig = {
   url: "https://www.browsemarketplaces.com",
-  name: "Browse Marketplaces: Nationwide Search for the Facebook Marketplace",
+  name: "Browse Multiple Marketplaces Nationwide",
   description:
-    "Search the Facebook Marketplace across the lower 48 states of the USA.",
+    "Search across Facebook Marketplace, Amazon, eBay, and eBay Sold listings across the USA.",
   mainNav: [
     {
       title: "Home",
@@ -39,37 +39,46 @@ export const siteConfig = {
       "0": "All",
     },
   },
-  templateURL: {
-    miles:
-      "https://www.facebook.com/marketplace/|CITY|/search?query=|STRING|&radius=805",
-  },
-  countries: {
-    usa: {
-      name: "USA (lower 48)",
-      icon: "usa_48.png",
-      locale: "miles",
-      cities: [
-        "Portland, OR",
-        "Los Angeles, CA",
-        "Durango, CO",
-        "Broadus, MT",
-        "Fort Worth, TX",
-        "Boscobel, WI",
-        "Fitzgerald, GA",
-        "Oneonta, NY",
-      ],
-      cities_fb: [
-        "portland",
-        "la",
-        "108129565875623",
-        "109613652398861",
-        "114148045261892",
-        "106171882747436",
-        "112442175434378",
-        "113333232014461",
-      ],
-      coverage:
-        "https://www.mapdevelopers.com/draw-circle-tool.php?circles=%5B%5B804670%2C34.0536909%2C-118.242766%2C%22%23FFAAAA%22%2C%22%23FF0000%22%2C0.4%5D%2C%5B804670%2C45.5202471%2C-122.6741949%2C%22%23FFAAAA%22%2C%22%23FF0000%22%2C0.4%5D%2C%5B804670%2C31.7098163%2C-83.2518613%2C%22%23FFAAAA%22%2C%22%23FF0000%22%2C0.4%5D%2C%5B804670%2C42.4517838%2C-75.0569094%2C%22%23FFAAAA%22%2C%22%23FF0000%22%2C0.4%5D%2C%5B804670%2C43.1367176%2C-90.7068445%2C%22%23FFAAAA%22%2C%22%23FF0000%22%2C0.4%5D%2C%5B804670%2C37.2713951%2C-107.8815978%2C%22%23FFAAAA%22%2C%22%23FF0000%22%2C0.4%5D%2C%5B804670%2C32.7762719%2C-97.3241996%2C%22%23FFAAAA%22%2C%22%23FF0000%22%2C0.4%5D%2C%5B804670%2C45.4390698%2C-105.4059145%2C%22%23FFAAAA%22%2C%22%23FF0000%22%2C0.4%5D%5D",
+  marketplaces: {
+    facebook: {
+      name: "Facebook Marketplace",
+      icon: "facebook.svg",
+      templateURL:
+        "https://www.facebook.com/marketplace/search?query=|STRING|&exact=false&radius=805",
+      searchParams: {
+        sortBy: "best_match",
+        availability: "in stock",
+        deliveryMethod: "all",
+        daysSinceListed: "0",
+      },
+    },
+    amazon: {
+      name: "Amazon",
+      icon: "amazon.png",
+      templateURL: "https://www.amazon.com/s?k=|STRING|",
+      requiresCities: false,
+      searchParams: {},
+    },
+    ebay: {
+      name: "eBay",
+      icon: "ebay.svg",
+      templateURL: "https://www.ebay.com/sch/i.html?_nkw=|STRING|",
+      requiresCities: false,
+      searchParams: {
+        minPrice: "_udlo",
+        maxPrice: "_udhi",
+      },
+    },
+    ebay_sold: {
+      name: "eBay (Sold)",
+      icon: "ebay.svg",
+      templateURL:
+        "https://www.ebay.com/sch/i.html?_nkw=|STRING|&LH_Sold=1&LH_Complete=1",
+      requiresCities: false,
+      searchParams: {
+        minPrice: "_udlo",
+        maxPrice: "_udhi",
+      },
     },
   },
 }
