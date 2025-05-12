@@ -87,9 +87,9 @@ export default function Search() {
 
   const getAmazonConditionValue = (condition: string): string => {
     const conditionMap: Record<string, string> = {
-      used: "used",
-      renewed: "certified-refurbished",
-      new: "new",
+      new: "6503240011",
+      renewed: "16907722011",
+      used: "6503242011",
     }
     return conditionMap[condition] || ""
   }
@@ -138,17 +138,11 @@ export default function Search() {
 
         case "Amazon":
           const amazonConditions = selectedConditions
-            .filter(
-              (c) =>
-                siteConfig.filters.itemCondition.amazon[
-                  c as keyof typeof siteConfig.filters.itemCondition.amazon
-                ]
-            )
             .map(getAmazonConditionValue)
             .filter(Boolean)
 
           if (amazonConditions.length > 0) {
-            searchURL += `&rh=n%3A172282%2Cp_n_condition-type%3A${amazonConditions.join("%2C")}`
+            searchURL += `&rh=n%3A21514055011%2Cp_n_condition-type%3A${amazonConditions[0]}`
           }
           break
       }
