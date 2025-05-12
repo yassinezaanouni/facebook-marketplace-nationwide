@@ -52,7 +52,8 @@ export default function Search() {
     itemConditionInitialState[key] = false
   })
   const [itemCondition, setItemCondition] = useState(itemConditionInitialState)
-  const [selectedMarketplace, setSelectedMarketplace] = useState<string>("")
+  const [selectedMarketplace, setSelectedMarketplace] =
+    useState<string>("facebook")
 
   const device = useDeviceDetection()
   const marketplaces = siteConfig.marketplaces
@@ -305,18 +306,18 @@ export default function Search() {
                   />
                   <Label
                     htmlFor={`marketplace_${id}`}
-                    className="flex flex-col  items-center justify-center p-4 h-full rounded-lg border-2 border-muted bg-popover/50 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer transition-all"
+                    className="flex flex-col  items-center  text-center justify-center p-4 h-full rounded-lg border-2 border-muted bg-popover/50 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer transition-all"
                   >
-                    <div className="mb-3">
+                    <div className="flex items-center justify-center flex-1 mb-3">
                       <Image
                         src={`/marketplaces/${marketplace.icon}`}
                         alt={marketplace.name}
                         width={32}
                         height={32}
-                        className="rounded-md"
+                        className="object-contain rounded-md"
                       />
                     </div>
-                    <span className="text-sm font-medium">
+                    <span className=" text-sm font-medium">
                       {marketplace.name}
                     </span>
                   </Label>
@@ -327,7 +328,7 @@ export default function Search() {
 
           <div className="bg-primary/3 sm:mb-4 rounded-xl w-full p-6 mb-2">
             <div className="mb-4 text-base font-medium">Item Condition</div>
-            <div className="md:grid-cols-4 grid grid-cols-2 gap-4">
+            <div className="flex flex-wrap justify-between gap-4">
               {selectedMarketplace &&
                 Object.entries(
                   siteConfig.filters.itemCondition[
@@ -338,7 +339,7 @@ export default function Search() {
                   ]
                 ).map(([key, label]) => (
                   <div key={key}>
-                    <label className="flex items-center space-x-3 cursor-pointer">
+                    <label className="flex gap-2 cursor-pointer">
                       <Checkbox
                         name="condition"
                         id={`condition_${key}`}
