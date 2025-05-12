@@ -34,7 +34,7 @@ export const siteConfig = {
       ebay: {
         new: "New",
         open_box: "Open box",
-        refurbished: "eBay Refurbished",
+        refurbished: "Refurbished",
         used: "Used",
       },
       amazon: {
