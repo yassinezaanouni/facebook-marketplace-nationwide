@@ -98,11 +98,20 @@ export default function Search() {
     let searchURL = marketplace.templateURL.replace("|STRING|", searchTerm)
 
     // Add marketplace-specific search parameters
-    if (minPrice && marketplace.searchParams.minPrice) {
-      searchURL += `&${marketplace.searchParams.minPrice}=${minPrice}`
-    }
-    if (maxPrice && marketplace.searchParams.maxPrice) {
-      searchURL += `&${marketplace.searchParams.maxPrice}=${maxPrice}`
+    if (marketplace.name === "Facebook Marketplace") {
+      if (minPrice) {
+        searchURL += `&minPrice=${minPrice}`
+      }
+      if (maxPrice) {
+        searchURL += `&maxPrice=${maxPrice}`
+      }
+    } else {
+      if (minPrice && marketplace.searchParams.minPrice) {
+        searchURL += `&${marketplace.searchParams.minPrice}=${minPrice}`
+      }
+      if (maxPrice && marketplace.searchParams.maxPrice) {
+        searchURL += `&${marketplace.searchParams.maxPrice}=${maxPrice}`
+      }
     }
 
     // Get selected conditions
@@ -354,6 +363,7 @@ export default function Search() {
                 value={minPrice}
                 onChange={updateMinPrice}
                 placeholder="0"
+                disabled={selectedMarketplace !== "facebook"}
               />
             </label>
             <label className="flex-1">
@@ -368,6 +378,7 @@ export default function Search() {
                 value={maxPrice}
                 onChange={updateMaxPrice}
                 placeholder="No limit"
+                disabled={selectedMarketplace !== "facebook"}
               />
             </label>
           </div>
