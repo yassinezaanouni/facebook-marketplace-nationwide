@@ -23,6 +23,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 
+import { ModeToggle } from "./ModeToggle"
 import ProfitCalculator from "./ProfitCalculator"
 import SubscriptionForm from "./SubscriptionForm"
 import { Label } from "./ui/label"
@@ -54,6 +55,7 @@ export default function Search() {
   const [itemCondition, setItemCondition] = useState(itemConditionInitialState)
   const [selectedMarketplace, setSelectedMarketplace] =
     useState<string>("facebook")
+  const [isCollectorMode, setIsCollectorMode] = useState(false)
 
   const device = useDeviceDetection()
   const marketplaces = siteConfig.marketplaces
@@ -268,25 +270,33 @@ export default function Search() {
             {resultLinks}
           </div>
         )}
-        <div className="flex gap-4">
-          <Input
-            id="search"
-            className="search text-primary py-6 !text-xl"
-            type="text"
-            value={searchTerm}
-            onChange={updateSearchTerm}
-            onKeyDown={handleKeyPress}
-            placeholder="Search for..."
-            autoFocus
-          />
-          <div>
-            <Button
-              className="min-w-40 !h-full uppercase cursor-pointer"
-              onClick={doSearch}
-              disabled={!selectedMarketplace || !searchTerm.trim()}
-            >
-              Search
-            </Button>
+        <div className="flex flex-col gap-4">
+          <div className="flex justify-end">
+            <ModeToggle
+              isCollectorMode={isCollectorMode}
+              onModeChange={setIsCollectorMode}
+            />
+          </div>
+          <div className="flex gap-4">
+            <Input
+              id="search"
+              className="search text-primary py-6 !text-xl"
+              type="text"
+              value={searchTerm}
+              onChange={updateSearchTerm}
+              onKeyDown={handleKeyPress}
+              placeholder="Search for..."
+              autoFocus
+            />
+            <div>
+              <Button
+                className="min-w-40 !h-full uppercase cursor-pointer"
+                onClick={doSearch}
+                disabled={!selectedMarketplace || !searchTerm.trim()}
+              >
+                Search
+              </Button>
+            </div>
           </div>
         </div>
         <div className=" flex flex-row flex-wrap mt-4">
@@ -388,10 +398,10 @@ export default function Search() {
             </label>
           </div>
         </div>
-        <SubscriptionForm />
+        <SubscriptionForm isCollectorMode={isCollectorMode} />
       </div>
 
-      <ProfitCalculator />
+      {!isCollectorMode && <ProfitCalculator />}
     </div>
   )
 }

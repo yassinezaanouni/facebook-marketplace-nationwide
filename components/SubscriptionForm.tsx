@@ -13,7 +13,13 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
-export default function SubscriptionForm() {
+interface SubscriptionFormProps {
+  isCollectorMode: boolean
+}
+
+export default function SubscriptionForm({
+  isCollectorMode,
+}: SubscriptionFormProps) {
   const [email, setEmail] = useState("")
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
@@ -31,8 +37,9 @@ export default function SubscriptionForm() {
           Want to Learn More?
         </CardTitle>
         <CardDescription className="text-base">
-          Subscribe and receive a free e-book packed with everything you need to
-          know about finding profitable items to flip.
+          {isCollectorMode
+            ? "Subscribe and receive a free guide on how to build and maintain your collection, including tips on authentication and preservation."
+            : "Subscribe and receive a free e-book packed with everything you need to know about finding profitable items to flip."}
         </CardDescription>
       </CardHeader>
       <CardContent>
