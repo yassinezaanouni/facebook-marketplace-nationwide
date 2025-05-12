@@ -75,6 +75,32 @@ export default function Search() {
     setSelectedMarketplace(value)
   }
 
+  const getEbayConditionValue = (condition: string): string => {
+    switch (condition) {
+      case "new":
+        return "1000"
+      case "used_like_new":
+      case "used_good":
+      case "used_fair":
+        return "3000"
+      default:
+        return ""
+    }
+  }
+
+  const getAmazonConditionValue = (condition: string): string => {
+    switch (condition) {
+      case "new":
+        return "new"
+      case "used_like_new":
+      case "used_good":
+      case "used_fair":
+        return "used"
+      default:
+        return ""
+    }
+  }
+
   const buildSearchURL = (marketplace: MarketplaceConfig) => {
     let searchURL = marketplace.templateURL.replace("|STRING|", searchTerm)
 
@@ -86,12 +112,44 @@ export default function Search() {
       searchURL += `&${marketplace.searchParams.maxPrice}=${maxPrice}`
     }
 
-    // Add other marketplace-specific parameters
-    Object.entries(marketplace.searchParams).forEach(([key, value]) => {
-      if (!["minPrice", "maxPrice"].includes(key)) {
-        searchURL += `&${key}=${value}`
+    // Get selected conditions
+    const selectedConditions = Object.entries(itemCondition)
+      .filter(([_, isSelected]) => isSelected)
+      .map(([key]) => key)
+
+    // Add conditions based on marketplace
+    if (selectedConditions.length > 0) {
+      switch (marketplace.name) {
+        case "Facebook Marketplace":
+          if (selectedConditions.length > 0) {
+            searchURL += `&itemCondition=${selectedConditions.join("%2C")}`
+          }
+          break
+
+        case "eBay":
+        case "eBay (Sold)":
+          const ebayConditions = Array.from(
+            new Set(
+              selectedConditions.map(getEbayConditionValue).filter(Boolean)
+            )
+          )
+          ebayConditions.forEach((condition) => {
+            searchURL += `&LH_ItemCondition=${condition}`
+          })
+          break
+
+        case "Amazon":
+          const amazonConditions = Array.from(
+            new Set(
+              selectedConditions.map(getAmazonConditionValue).filter(Boolean)
+            )
+          )
+          if (amazonConditions.length > 0) {
+            searchURL += `&condition=${amazonConditions.join(",")}`
+          }
+          break
       }
-    })
+    }
 
     return searchURL
   }
@@ -109,7 +167,7 @@ export default function Search() {
     const marketplace =
       marketplaces[selectedMarketplace as keyof typeof marketplaces]
     const searchURL = buildSearchURL(marketplace)
-
+    console.log(searchURL)
     if (device !== "Mobile") {
       if (searchThrottle) {
         let jobMinDelay = searchThrottle - searchThrottle * 0.1
