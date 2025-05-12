@@ -17,14 +17,17 @@ export function SiteHeader() {
         <div className="md:gap-10 flex gap-6">
           <div>
             <h1 className="sm:text-m md:text-2xl xl:text-4xl text-lg font-extrabold leading-tight tracking-tighter">
-              Browse <span className="text-primary">Marketplaces</span>
+              <div className="flex items-center gap-2">
+                <Icons.cart className="size-8 stroke-3 text-primary" />
+                <span className="text-primary">FlipScoutly</span>
+              </div>
             </h1>
             <h4 className="md:text-md sm:text-sm text-xs font-extrabold leading-tight tracking-tighter">
-              Search the{" "}
+              Search{" "}
               <span className="text-primary uppercase">
-                Facebook <sup className="mb-8 text-[0.5em]">TM</sup> Marketplace
+                FACEBOOK<sup className="mb-8 text-[0.5em]">TM</sup> MARKETPLACE
               </span>{" "}
-              nationwide!
+              & OTHERS nationwide!
             </h4>
           </div>
         </div>
