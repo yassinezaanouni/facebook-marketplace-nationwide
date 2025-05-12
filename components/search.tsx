@@ -24,6 +24,7 @@ import { Input } from "@/components/ui/input"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 
 import ProfitCalculator from "./ProfitCalculator"
+import SubscriptionForm from "./SubscriptionForm"
 import { Label } from "./ui/label"
 
 ReactGA.initialize(process.env.NEXT_PUBLIC_GA4_ANALYTICS_ID)
@@ -288,7 +289,7 @@ export default function Search() {
           </div>
         </div>
         <div className=" flex flex-row flex-wrap mt-4">
-          <div className="bg-primary/3 sm:mb-6 rounded-xl w-full p-6 mb-2">
+          <div className="bg-primary/3 sm:mb-4 rounded-xl w-full p-6 mb-2">
             <div className="mb-4 text-base font-medium">Select Marketplace</div>
             <RadioGroup
               value={selectedMarketplace}
@@ -324,7 +325,7 @@ export default function Search() {
             </RadioGroup>
           </div>
 
-          <div className="bg-primary/3 sm:mb-6 rounded-xl w-full p-6 mb-2">
+          <div className="bg-primary/3 sm:mb-4 rounded-xl w-full p-6 mb-2">
             <div className="mb-4 text-base font-medium">Item Condition</div>
             <div className="md:grid-cols-4 grid grid-cols-2 gap-4">
               {selectedMarketplace &&
@@ -353,7 +354,7 @@ export default function Search() {
             </div>
           </div>
 
-          <div className="bg-primary/3 sm:flex-row rounded-xl flex flex-col w-full gap-6 p-6">
+          <div className="bg-primary/3 sm:mb-4 sm:flex-row rounded-xl flex flex-col w-full gap-6 p-6">
             <label className="flex-1">
               <span className="block mb-2 text-base font-medium">
                 Min. Price
@@ -386,7 +387,9 @@ export default function Search() {
             </label>
           </div>
         </div>
+        <SubscriptionForm />
       </div>
+
       <ProfitCalculator />
     </div>
   )

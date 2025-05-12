@@ -8,6 +8,7 @@ import { siteConfig } from "@/config/site"
 import { buttonVariants } from "@/components/ui/button"
 import { Icons } from "@/components/icons"
 import Search from "@/components/search"
+import SubscriptionForm from "@/components/SubscriptionForm"
 
 import useDeviceDetection from "../lib/device"
 
