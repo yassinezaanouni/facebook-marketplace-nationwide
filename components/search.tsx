@@ -328,7 +328,7 @@ export default function Search() {
 
           <div className="bg-primary/3 sm:mb-4 rounded-xl w-full p-6 mb-2">
             <div className="mb-4 text-base font-medium">Item Condition</div>
-            <div className="flex flex-wrap justify-between gap-4">
+            <div className="md:grid-cols-4 grid grid-cols-2 gap-6">
               {selectedMarketplace &&
                 Object.entries(
                   siteConfig.filters.itemCondition[
