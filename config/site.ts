@@ -85,8 +85,7 @@ export const siteConfig = {
     ebay_sold: {
       name: "eBay (Sold)",
       icon: "ebay.svg",
-      templateURL:
-        "https://www.ebay.com/sch/i.html?_nkw=|STRING|&LH_Sold=1&LH_Complete=1",
+      templateURL: "https://www.ebay.com/sch/i.html?_nkw=|STRING|&LH_Sold=1",
       requiresCities: false,
       searchParams: {
         minPrice: "_udlo",
