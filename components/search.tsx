@@ -1,38 +1,56 @@
-'use client'
+"use client"
 
-import {ChangeEvent, JSX, KeyboardEvent, useCallback, useEffect, useState} from 'react'
-import * as Defs from '@/lib/defs'
+import {
+  ChangeEvent,
+  JSX,
+  KeyboardEvent,
+  useCallback,
+  useEffect,
+  useState,
+} from "react"
 import Link from "next/link"
-import {siteConfig} from "@/config/site"
-import {cn, sliceIntoChunks} from "@/lib/utils"
-import {Input} from "@/components/ui/input"
-import {Button, buttonVariants} from "@/components/ui/button"
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select"
-import {HoverCard, HoverCardContent, HoverCardTrigger} from "@/components/ui/hover-card"
-import {Checkbox} from "@/components/ui/checkbox"
-import {getCookie, setCookie} from "@/components/cookies"
+import { useSearchParams } from "next/navigation"
 import ReactGA from "react-ga4"
-import {useSearchParams} from 'next/navigation'
-import {TimedQueue} from '@/lib/timed-queue'
+
+import { siteConfig } from "@/config/site"
+import * as Defs from "@/lib/defs"
+import { TimedQueue } from "@/lib/timed-queue"
+import { cn } from "@/lib/utils"
+import { Button, buttonVariants } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Input } from "@/components/ui/input"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 import "@/styles/components/select.css"
-import Image from "next/image";
-import device from "@/lib/device";
-import useDeviceDetection from "@/lib/device";
+
+import useDeviceDetection from "@/lib/device"
 
 ReactGA.initialize(process.env.NEXT_PUBLIC_GA4_ANALYTICS_ID)
 
 export default function Search() {
   const [searchTerm, setSearch] = useState("")
   const [lastSearchTerm, setLastSearchTerm] = useState("")
-  const searchThrottle = parseInt(useSearchParams().get('throttle') || '0' as string)
-  const [country, setCountry] = useState("usa")
+  const searchThrottle = parseInt(
+    useSearchParams().get("throttle") || ("0" as string)
+  )
   const [minPrice, setMinPrice] = useState("")
   const [maxPrice, setMaxPrice] = useState("")
   const [sortBy, setSortBy] = useState(siteConfig.filters.defaultSortBy)
-  const [availability, setAvailability] = useState(siteConfig.filters.defaultAvailability)
-  const [deliveryMethod, setDeliveryMethod] = useState(siteConfig.filters.defaultDeliveryMethod)
-  const [daysSinceListed, setDaysSinceListed] = useState(siteConfig.filters.defaultDaysSinceListed)
+  const [availability, setAvailability] = useState(
+    siteConfig.filters.defaultAvailability
+  )
+  const [deliveryMethod, setDeliveryMethod] = useState(
+    siteConfig.filters.defaultDeliveryMethod
+  )
+  const [daysSinceListed, setDaysSinceListed] = useState(
+    siteConfig.filters.defaultDaysSinceListed
+  )
   const [resultLinks, setResultLinks] = useState<any[]>([])
   const itemConditionInitialState: Record<string, boolean> = {}
   Object.keys(siteConfig.filters.itemCondition).map((key) => {
@@ -42,119 +60,104 @@ export default function Search() {
 
   const device = useDeviceDetection()
 
-  useEffect(() => {
-    let cookieCountry = getCookie('country')
-    if (cookieCountry) {
-      setCountry(cookieCountry)
-    }
-  }, [country])
-
   const countriesData: Defs.Countries = siteConfig.countries
-  const splitCountriesData = sliceIntoChunks(Object.keys(countriesData), device === "Mobile" ? siteConfig.countriesPerRowMobile : siteConfig.countriesPerRow)
   const filterSortBy: Defs.FilterSortBy = siteConfig.filters.sortBy
-  const filterItemCondition: Defs.FilterItemCondition = siteConfig.filters.itemCondition
-  const filterAvailability: Defs.FilterAvailability = siteConfig.filters.availability
-  const filterDeliveryMethod: Defs.FilterDeliveryMethod = siteConfig.filters.deliveryMethod
-  const filterDaysSinceListed: Defs.FilterDaysSinceListed = siteConfig.filters.daysSinceListed
+  const filterItemCondition: Defs.FilterItemCondition =
+    siteConfig.filters.itemCondition
+  const filterAvailability: Defs.FilterAvailability =
+    siteConfig.filters.availability
+  const filterDeliveryMethod: Defs.FilterDeliveryMethod =
+    siteConfig.filters.deliveryMethod
+  const filterDaysSinceListed: Defs.FilterDaysSinceListed =
+    siteConfig.filters.daysSinceListed
 
-  const updateSearchTerm = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      setSearch(e.target.value)
-    },
-    []
-  )
+  const updateSearchTerm = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value)
+  }, [])
 
-  const updateMinPrice = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      setMinPrice(e.target.value)
-    },
-    []
-  )
-  const updateMaxPrice = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      setMaxPrice(e.target.value)
-    }, []
-  )
+  const updateMinPrice = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    setMinPrice(e.target.value)
+  }, [])
+  const updateMaxPrice = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    setMaxPrice(e.target.value)
+  }, [])
   const updateConditions = (itemIndex: string, isChecked: boolean) => {
     const updatedListOfItems: Record<string, boolean> = itemCondition
     updatedListOfItems[itemIndex] = isChecked
     setItemCondition(updatedListOfItems)
   }
 
-  function setCountryAndCookie(newCountry: string) {
-    if (newCountry!=getCookie('country')) {
-      setCookie('country', newCountry)
-    }
-    if (newCountry!=country) {
-      setCountry(newCountry)
-    }
-  }
-
   const doSearch = useCallback(() => {
     if (searchTerm.trim() === "") return
-    let citiesFb = countriesData[country].cities_fb
-    let locale: string = countriesData[country].locale
+    let citiesFb = countriesData["usa"].cities_fb
+    let locale: string = countriesData["usa"].locale
     let jobQueue: TimedQueue = new TimedQueue()
     let linksHTML: any[] = []
 
     citiesFb.forEach((city, cityIdx) => {
-      let searchURL = siteConfig.templateURL[locale as keyof typeof siteConfig.templateURL]
-        .replace('|CITY|', city)
-        .replace('|STRING|', searchTerm)
+      let searchURL = siteConfig.templateURL[
+        locale as keyof typeof siteConfig.templateURL
+      ]
+        .replace("|CITY|", city)
+        .replace("|STRING|", searchTerm)
 
-      if (!!minPrice) searchURL += '&minPrice=' + minPrice
-      if (!!maxPrice) searchURL += '&maxPrice=' + maxPrice
+      if (!!minPrice) searchURL += "&minPrice=" + minPrice
+      if (!!maxPrice) searchURL += "&maxPrice=" + maxPrice
 
-      if (sortBy!==siteConfig.filters.defaultSortBy)
-        searchURL += '&sortBy=' + sortBy
+      if (sortBy !== siteConfig.filters.defaultSortBy)
+        searchURL += "&sortBy=" + sortBy
 
       let itemConditionStatus: any[] = []
       Object.keys(itemCondition).map((itemKey) => {
         if (itemCondition[itemKey]) itemConditionStatus.push(itemKey)
       })
-      if (itemConditionStatus.length) searchURL += '&itemCondition=' + itemConditionStatus.join(',')
+      if (itemConditionStatus.length)
+        searchURL += "&itemCondition=" + itemConditionStatus.join(",")
 
-      if (availability!==siteConfig.filters.defaultAvailability)
-        searchURL += '&availability=' + availability
+      if (availability !== siteConfig.filters.defaultAvailability)
+        searchURL += "&availability=" + availability
 
-      searchURL += '&deliveryMethod=' + deliveryMethod
+      searchURL += "&deliveryMethod=" + deliveryMethod
 
-      if (daysSinceListed!==siteConfig.filters.defaultDaysSinceListed)
-        searchURL += '&daysSinceListed=' + daysSinceListed
-
+      if (daysSinceListed !== siteConfig.filters.defaultDaysSinceListed)
+        searchURL += "&daysSinceListed=" + daysSinceListed
 
       if (device !== "Mobile") {
         if (searchThrottle) {
-          let jobMinDelay = searchThrottle - (searchThrottle * 0.1)
-          let jobMaxDelay = searchThrottle + (searchThrottle * 0.1)
+          let jobMinDelay = searchThrottle - searchThrottle * 0.1
+          let jobMaxDelay = searchThrottle + searchThrottle * 0.1
           jobQueue.addTask({
             callback: () => {
-              window.open(searchURL, "fbmp" + country + "search" + city)
+              window.open(searchURL, "fbmpusasearch" + city)
             },
-            time: Math.ceil(Math.random() * (jobMaxDelay - jobMinDelay) + jobMinDelay)
+            time: Math.ceil(
+              Math.random() * (jobMaxDelay - jobMinDelay) + jobMinDelay
+            ),
           })
         } else {
-          window.open(searchURL, "fbmp" + country + "search" + city)
+          window.open(searchURL, "fbmpusasearch" + city)
         }
       }
 
       linksHTML.push(
         <Link
-          className=" my-0 cursor-pointer px-2"
+          className=" px-2 my-0 cursor-pointer"
           href={searchURL}
-          target={`fbmp${country}search${city}`}
+          target={`fbmpusasearch${city}`}
         >
           <div
-            className={cn("mb-2", buttonVariants({
-              size: "sm",
-              variant: "outline",
-            }))}
+            className={cn(
+              "mb-2",
+              buttonVariants({
+                size: "sm",
+                variant: "outline",
+              })
+            )}
           >
-            {countriesData[country].cities[cityIdx]}
+            {countriesData["usa"].cities[cityIdx]}
           </div>
         </Link>
       )
-
     })
 
     setLastSearchTerm(searchTerm)
@@ -164,17 +167,28 @@ export default function Search() {
 
     ReactGA.event({
       category: "search",
-      action: `search_${country}`,
-      label: searchTerm
+      action: "search_usa",
+      label: searchTerm,
     })
     // @ts-ignore umami is defined in the global scope via the umami script
-    window.umami.track(`search_${country}`, { searchTerm: searchTerm })
-    
-  }, [device, searchTerm, country, countriesData, sortBy, itemCondition, availability, daysSinceListed, minPrice, maxPrice, deliveryMethod, searchThrottle])
+    window.umami.track("search_usa", { searchTerm: searchTerm })
+  }, [
+    device,
+    searchTerm,
+    countriesData,
+    sortBy,
+    itemCondition,
+    availability,
+    daysSinceListed,
+    minPrice,
+    maxPrice,
+    deliveryMethod,
+    searchThrottle,
+  ])
 
   const handleKeyPress = useCallback(
     (e: KeyboardEvent<HTMLInputElement>) => {
-      if (searchTerm && e.key === 'Enter') {
+      if (searchTerm && e.key === "Enter") {
         e.preventDefault()
         doSearch()
       } else {
@@ -184,149 +198,189 @@ export default function Search() {
     [searchTerm, doSearch]
   )
 
-  function countryDataRow(row: Array<string>) {
-    return (
-      row.map((key: string) => (
-          <div className={cn("w-1/"+siteConfig.countriesPerRow, "mx-auto flex-none text-center")} key={key}>
-            <HoverCard>
-              <HoverCardTrigger>
-                <Button
-                  className={cn("w-16 cursor-pointer p-2", (key === country) ? 'bg-secondary' : '')}
-                  variant="outline"
-                  onClick={() => setCountryAndCookie(key)}>
-                  <Image width={64} height={64} src={`./flags/${countriesData[key].icon}`} alt={countriesData[key].name} />
-                </Button>
-              </HoverCardTrigger>
-              <HoverCardContent className="text-sm">
-                Searches <span
-                className="whitespace-nowrap font-bold text-primary">{countriesData[key].name}</span> nationwide by opening <b className="whitespace-nowrap">{countriesData[key].cities.length} tabs</b>. <Link
-                className="text-xs underline" href={countriesData[key].coverage} title={countriesData[key].cities.join('\n')} target="_blank" rel="noreferrer">See
-                coverage</Link>
-              </HoverCardContent>
-            </HoverCard>
-          </div>
-        )
-      )
-    )
-  }
-
-  function listRow(row: Array<string>) {
-    return (
-      <div className="mt-10 flex" key={row.join('_')}>
-        { countryDataRow(row) }
-      </div>
-    )
-  }
-
-  const listCountries = () => {
-    let content: JSX.Element[] = []
-    Object.values(splitCountriesData).map((row) => (
-      content.push( listRow(row) )
-    ))
-    return (content)
-  }
-
-
   return (
     <>
-      <div className="flex w-full flex-col">
-        { device === "Mobile" && !!resultLinks.length && (
-          <div className="mb-8 inline-block text-lg">
-            <div className="mb-0 font-bold text-primary">Results for &quot;{lastSearchTerm}&quot;</div>
-            <div className="mb-2 text-sm"> 500 {countriesData[country].locale} radius of:</div>
-            { resultLinks }
+      <div className="flex flex-col w-full">
+        {device === "Mobile" && !!resultLinks.length && (
+          <div className="inline-block mb-8 text-lg">
+            <div className="text-primary mb-0 font-bold">
+              Results for &quot;{lastSearchTerm}&quot;
+            </div>
+            <div className="mb-2 text-sm">
+              {" "}
+              500 {countriesData["usa"].locale} radius of:
+            </div>
+            {resultLinks}
           </div>
         )}
         <div className="fontSans flex flex-row">
-          <Input id="search" className="search py-6 text-3xl text-primary caret-secondary" type="text" value={searchTerm} onChange={updateSearchTerm} onKeyDown={handleKeyPress} placeholder="Search for..." autoFocus />
-          <Button className="my-0 ml-8 cursor-pointer px-8 uppercase" onClick={doSearch}>Search</Button>
+          <Input
+            id="search"
+            className="search text-primary caret-secondary py-6 text-3xl"
+            type="text"
+            value={searchTerm}
+            onChange={updateSearchTerm}
+            onKeyDown={handleKeyPress}
+            placeholder="Search for..."
+            autoFocus
+          />
+          <Button
+            className="px-8 my-0 ml-8 uppercase cursor-pointer"
+            onClick={doSearch}
+          >
+            Search
+          </Button>
         </div>
-        <div className="fontSans mt-4 flex flex-row flex-wrap">
-          <label className="mb-1 w-full text-xs sm:mb-4 sm:w-1/4">
-            <div className="m-1 rounded bg-primary/5 p-2">
-                Sort By &nbsp;
-              <Select name="sort_by" onValueChange={setSortBy} defaultValue={siteConfig.filters.defaultSortBy}>
-                <SelectTrigger className="mt-1 cursor-pointer bg-transparent p-0 text-primary">
+        <div className="fontSans flex flex-row flex-wrap mt-4">
+          <label className="sm:mb-4 sm:w-1/4 w-full mb-1 text-xs">
+            <div className="bg-primary/5 p-2 m-1 rounded">
+              Sort By &nbsp;
+              <Select
+                name="sort_by"
+                onValueChange={setSortBy}
+                defaultValue={siteConfig.filters.defaultSortBy}
+              >
+                <SelectTrigger className="text-primary p-0 mt-1 bg-transparent cursor-pointer">
                   <SelectValue placeholder="Sort By" />
                 </SelectTrigger>
                 <SelectContent>
-                  { Object.keys(filterSortBy).map((sortKey) => (
-                    <SelectItem className="cursor-pointer" key={sortKey} value={sortKey}>{filterSortBy[sortKey]}</SelectItem>
+                  {Object.keys(filterSortBy).map((sortKey) => (
+                    <SelectItem
+                      className="cursor-pointer"
+                      key={sortKey}
+                      value={sortKey}
+                    >
+                      {filterSortBy[sortKey]}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
           </label>
-          <label className="mb-1 w-full text-xs sm:mb-4 sm:w-1/4">
-            <div className="m-1 rounded bg-primary/5 p-2">
+          <label className="sm:mb-4 sm:w-1/4 w-full mb-1 text-xs">
+            <div className="bg-primary/5 p-2 m-1 rounded">
               Days Since Listed &nbsp;
-              <Select name="daysSinceListed" onValueChange={setDaysSinceListed} defaultValue={siteConfig.filters.defaultDaysSinceListed}>
-                <SelectTrigger className="mt-1 cursor-pointer bg-transparent p-0 text-primary focus-visible:outline-none">
+              <Select
+                name="daysSinceListed"
+                onValueChange={setDaysSinceListed}
+                defaultValue={siteConfig.filters.defaultDaysSinceListed}
+              >
+                <SelectTrigger className="text-primary focus-visible:outline-none p-0 mt-1 bg-transparent cursor-pointer">
                   <SelectValue placeholder="Days Since Listed" />
                 </SelectTrigger>
                 <SelectContent>
-                  { Object.keys(filterDaysSinceListed).map((daysKey) => (
-                    <SelectItem className="cursor-pointer" key={daysKey} value={daysKey}>{filterDaysSinceListed[daysKey]}</SelectItem>
+                  {Object.keys(filterDaysSinceListed).map((daysKey) => (
+                    <SelectItem
+                      className="cursor-pointer"
+                      key={daysKey}
+                      value={daysKey}
+                    >
+                      {filterDaysSinceListed[daysKey]}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
           </label>
-          <label className="mb-1 w-full text-xs sm:mb-4 sm:w-1/4">
-            <div className="m-1 rounded bg-primary/5 p-2">
+          <label className="sm:mb-4 sm:w-1/4 w-full mb-1 text-xs">
+            <div className="bg-primary/5 p-2 m-1 rounded">
               Availability &nbsp;
-              <Select name="availability" onValueChange={setAvailability} defaultValue={siteConfig.filters.defaultAvailability}>
-                <SelectTrigger className="mt-1 cursor-pointer bg-transparent p-0 text-primary focus-visible:outline-none">
+              <Select
+                name="availability"
+                onValueChange={setAvailability}
+                defaultValue={siteConfig.filters.defaultAvailability}
+              >
+                <SelectTrigger className="text-primary focus-visible:outline-none p-0 mt-1 bg-transparent cursor-pointer">
                   <SelectValue placeholder="Availability" />
                 </SelectTrigger>
                 <SelectContent>
-                  { Object.keys(filterAvailability).map((availKey) => (
-                    <SelectItem className="cursor-pointer" key={availKey} value={availKey}>{filterAvailability[availKey]}</SelectItem>
+                  {Object.keys(filterAvailability).map((availKey) => (
+                    <SelectItem
+                      className="cursor-pointer"
+                      key={availKey}
+                      value={availKey}
+                    >
+                      {filterAvailability[availKey]}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
-              </div>
+            </div>
           </label>
-          <label className="mb-1 w-full text-xs sm:mb-4 sm:w-1/4">
-            <div className="m-1 rounded bg-primary/5 p-2">
+          <label className="sm:mb-4 sm:w-1/4 w-full mb-1 text-xs">
+            <div className="bg-primary/5 p-2 m-1 rounded">
               Delivery &nbsp;
-              <Select name="delivery" onValueChange={setDeliveryMethod} defaultValue={siteConfig.filters.defaultDeliveryMethod}>
-                <SelectTrigger className="mt-1 cursor-pointer bg-transparent p-0 text-primary focus-visible:outline-none">
+              <Select
+                name="delivery"
+                onValueChange={setDeliveryMethod}
+                defaultValue={siteConfig.filters.defaultDeliveryMethod}
+              >
+                <SelectTrigger className="text-primary focus-visible:outline-none p-0 mt-1 bg-transparent cursor-pointer">
                   <SelectValue placeholder="Delivery" />
                 </SelectTrigger>
                 <SelectContent>
-                  { Object.keys(filterDeliveryMethod).map((deliveryKey) => (
-                    <SelectItem className="cursor-pointer" key={deliveryKey} value={deliveryKey}>{filterDeliveryMethod[deliveryKey]}</SelectItem>
+                  {Object.keys(filterDeliveryMethod).map((deliveryKey) => (
+                    <SelectItem
+                      className="cursor-pointer"
+                      key={deliveryKey}
+                      value={deliveryKey}
+                    >
+                      {filterDeliveryMethod[deliveryKey]}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
           </label>
-          <span className="h-0 w-full"></span>
-          <div className="m-1 mb-2 w-full rounded bg-primary/5 p-2 text-xs sm:mb-4">
+          <span className="w-full h-0"></span>
+          <div className="bg-primary/5 sm:mb-4 w-full p-2 m-1 mb-2 text-xs rounded">
             <div className="mb-3">Condition</div>
-            <div className="h-0 w-full"></div>
-            <div className="flex w-full flex-row">
-            { Object.keys(filterItemCondition).map((conditionKey: any) => (
-              <div key={conditionKey} className="w-1/4">
-                <label
-                  className="mr-4 cursor-pointer text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                >
-                  <Checkbox name="condition" id={`condition_${conditionKey}`} className="mr-2 cursor-pointer border-solid" onCheckedChange={(checked) => updateConditions(conditionKey, checked as boolean)} />
-                  <span className="">{filterItemCondition[conditionKey]}</span>
-                </label>
-              </div>
-            ))}
+            <div className="w-full h-0"></div>
+            <div className="flex flex-row w-full">
+              {Object.keys(filterItemCondition).map((conditionKey: any) => (
+                <div key={conditionKey} className="w-1/4">
+                  <label className="peer-disabled:cursor-not-allowed peer-disabled:opacity-70 mr-4 text-sm font-medium leading-none cursor-pointer">
+                    <Checkbox
+                      name="condition"
+                      id={`condition_${conditionKey}`}
+                      className="mr-2 border-solid cursor-pointer"
+                      onCheckedChange={(checked) =>
+                        updateConditions(conditionKey, checked as boolean)
+                      }
+                    />
+                    <span className="">
+                      {filterItemCondition[conditionKey]}
+                    </span>
+                  </label>
+                </div>
+              ))}
             </div>
           </div>
-          <span className="h-0 w-full"></span>
-          <div className="m-1 mb-4 flex w-full flex-row rounded bg-primary/5 p-2 text-xs">
-            <label className="w-1/2"><span className="mr-2 w-1/3 text-xs">Min. Price</span><Input className="prices mt-2 h-8 w-2/3 flex-none bg-transparent p-1 text-sm text-primary caret-secondary" id="minPrice" type="number" min="0" value={minPrice} onChange={updateMinPrice} /></label>
-            <label className="ml-6 w-1/2"><span className="mr-2 w-1/3 text-xs">Max. Price</span><Input className="prices mt-2 h-8 w-2/3 flex-none bg-transparent p-1 text-sm text-primary caret-secondary" id="maxPrice" type="number" min="0" value={maxPrice} onChange={updateMaxPrice} /></label>
+          <span className="w-full h-0"></span>
+          <div className="bg-primary/5 flex flex-row w-full p-2 m-1 mb-4 text-xs rounded">
+            <label className="w-1/2">
+              <span className="w-1/3 mr-2 text-xs">Min. Price</span>
+              <Input
+                className="prices text-primary caret-secondary flex-none w-2/3 h-8 p-1 mt-2 text-sm bg-transparent"
+                id="minPrice"
+                type="number"
+                min="0"
+                value={minPrice}
+                onChange={updateMinPrice}
+              />
+            </label>
+            <label className="w-1/2 ml-6">
+              <span className="w-1/3 mr-2 text-xs">Max. Price</span>
+              <Input
+                className="prices text-primary caret-secondary flex-none w-2/3 h-8 p-1 mt-2 text-sm bg-transparent"
+                id="maxPrice"
+                type="number"
+                min="0"
+                value={maxPrice}
+                onChange={updateMaxPrice}
+              />
+            </label>
           </div>
-        </div>
-        <div>
-          { listCountries() }
         </div>
       </div>
     </>
