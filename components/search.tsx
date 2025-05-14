@@ -1,3 +1,8 @@
+/*
+ * Portions of this code are from facebook-marketplace-nationwide (https://github.com/gmoz22/facebook-marketplace-nationwide)
+ * Licensed under the MIT License.
+ */
+
 "use client"
 
 import {

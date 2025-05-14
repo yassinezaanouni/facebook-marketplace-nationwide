@@ -62,3 +62,7 @@ _Thanks to @kylemd, @jnsjunior, @kwbr1_
 ### Made With
 
 <img src="https://img.shields.io/badge/next%20js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" /> <img src="https://img.shields.io/badge/shadcn%2Fui-000000?style=for-the-badge&logo=shadcnui&logoColor=white" />
+
+## Credits
+
+This project includes code from [facebook-marketplace-nationwide](https://github.com/yassinezaanouni/facebook-marketplace-nationwide), licensed under the MIT License.
