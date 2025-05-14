@@ -1,10 +1,16 @@
 "use client"
 
 import { useState } from "react"
+import { InfoIcon } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 export default function ProfitCalculator() {
   const [cogs, setCogs] = useState("")
@@ -45,9 +51,22 @@ export default function ProfitCalculator() {
 
   return (
     <div className="bg-primary/3 text-card-foreground p-6 border border-none rounded-lg shadow-none">
-      <h3 className="mb-6 text-2xl font-semibold">
+      <h3 className="mb-2 text-2xl font-semibold">
         FlipScoutly Profit & ROI Calculator
       </h3>
+      <div className="flex items-center gap-2 mb-6 text-muted-foreground text-xs">
+        <span>Estimated figures only</span>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <InfoIcon className="size-4 cursor-help" />
+          </TooltipTrigger>
+          <TooltipContent className="max-w-[300px] text-xs">
+            These calculations are for rough estimation purposes only. Actual
+            profits may vary based on various factors including shipping costs,
+            marketplace category fees, and other variables.
+          </TooltipContent>
+        </Tooltip>
+      </div>
 
       <div className="space-y-4">
         <div className="space-y-2">
