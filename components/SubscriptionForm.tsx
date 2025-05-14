@@ -34,12 +34,11 @@ export default function SubscriptionForm({
     <Card className="bg-primary/3 w-full shadow-none">
       <CardHeader className="space-y-2">
         <CardTitle className="text-2xl font-bold">
-          Want to Learn More?
+          Didn't Find What You Were Looking For?
         </CardTitle>
         <CardDescription className="text-base">
-          {isCollectorMode
-            ? "Subscribe and receive a free guide on how to build and maintain your collection, including tips on authentication and preservation."
-            : "Subscribe and receive a free e-book packed with everything you need to know about finding profitable items to flip."}
+          Tell us what you're looking for and your desired price range — we'll
+          send you an email alert if we find a match.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -81,7 +80,7 @@ export default function SubscriptionForm({
             />
           </div>
           <Button type="submit" className="w-full">
-            Subscribe Now
+            Set Alert
           </Button>
         </form>
       </CardContent>

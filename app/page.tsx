@@ -33,8 +33,8 @@ export default function IndexPage() {
         </div>
       )}*/}
       <Search />
-      <div className="flex px-8 justify-center pb-4 mt-10">
-        <div className="w-1/3 text-xs italic text-center">
+      <div className="flex px-8 justify-center pb-4 mt-10 max-w-md mx-auto">
+        <div className="text-xs italic text-center">
           All trademarks used are the property of their respective owners.{" "}
           <br className="xl:inline-block hidden" />
           Their use does not imply any affiliation nor endorsement.

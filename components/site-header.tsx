@@ -55,41 +55,66 @@ export function SiteHeader() {
                   </div>
                 </div>
               </PopoverTrigger>
-              <PopoverContent className="text-primary space-y-4 text-sm">
-                <p className="italic">
-                  May not work on tablets if the Facebook app is installed.
-                </p>
-                <p className="text-lg">
-                  Make sure you are logged into Facebook, that your ad/popup
-                  blockers are disabled and that{" "}
-                  <span className="font-semibold">
-                    your browser allows opening multiple tabs
-                  </span>
-                  :
-                </p>
-                <p>
-                  <span className="font-semibold">Google Chrome</span>
-                  <br />
-                  Go to Settings {">"} Privacy and security {">"} Content {">"}{" "}
-                  Pop-ups and redirects and manually add the site
-                  &quot;https://www.browsemarketplaces.com&quot; to the list of
-                  sites &quot;allowed to send pop-ups and use redirects&quot;.
-                </p>
-                <p>
-                  <span className="font-semibold">Firefox</span>
-                  <br />
-                  When you search in the tool it should tell you under the URL
-                  bar that you are about to open X pop-up windows and you can go
-                  to the preferences button to allow pop-ups for this website.
-                </p>
-                <p>
-                  <span className="font-semibold">Safari</span>
-                  <br />
-                  On the tab where you searched you will see at the end of the
-                  URL bar an icon with 2 windows superimposed. When you click on
-                  it, the missing tabs will open up and in the future they
-                  won&apos;t be blocked.
-                </p>
+              <PopoverContent className="text-primary space-y-4 text-sm max-w-md">
+                <div className="space-y-4">
+                  <div className="text-muted-foreground italic border-l-2 border-primary/20 pl-3">
+                    Note: For the best viewing experience, please use a desktop
+                    browser.
+                  </div>
+
+                  <div className="space-y-2">
+                    <p>
+                      The tool may not work properly on tablets if the Facebook
+                      app is installed.
+                    </p>
+                    <p>
+                      Ensure you're logged into Facebook and any other platforms
+                      you wish to search. Disable any ad blockers, and make sure
+                      your browser allows pop-ups and multiple tabs to open.
+                    </p>
+                  </div>
+
+                  <div>
+                    <h3 className="font-semibold mb-2">
+                      Browser-Specific Instructions:
+                    </h3>
+                    <div className="space-y-3">
+                      <div>
+                        <p className="font-medium">Google Chrome</p>
+                        <p className="text-muted-foreground">
+                          Go to: Settings &gt; Privacy and security &gt; Site
+                          Settings &gt; Pop-ups and redirects
+                          <br />
+                          Add{" "}
+                          <span className="text-primary">
+                            https://www.flipscoutly.com
+                          </span>{" "}
+                          to the list of allowed sites.
+                        </p>
+                      </div>
+
+                      <div>
+                        <p className="font-medium">Firefox</p>
+                        <p className="text-muted-foreground">
+                          When searching, you may see a message below the URL
+                          bar stating that multiple pop-ups are being blocked.
+                          Click Preferences and choose to allow pop-ups for this
+                          site.
+                        </p>
+                      </div>
+
+                      <div>
+                        <p className="font-medium">Safari</p>
+                        <p className="text-muted-foreground">
+                          After searching, look for an icon with two overlapping
+                          windows at the end of the URL bar. Click it to open
+                          blocked tabs. This will prevent blocking on future
+                          visits.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </PopoverContent>
             </Popover>
             <ThemeToggle />
