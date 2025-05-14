@@ -447,6 +447,14 @@ export default function Search() {
                 </Button>
               </div>
             </div>
+            <div className="text-xs -mt-2 text-muted-foreground mb-4">
+              <span className="font-semibold">Disclaimer:</span> This calculator
+              provides rough profit estimates based on user input. Results are
+              for informational purposes only and should not be considered exact
+              or guaranteed. Always verify calculations independently before
+              making financial decisions. calculations independently before
+              making financial decisions.
+            </div>
           </div>
           <div className=" bg-primary/3 sm:mb-4 rounded-xl w-full p-6 mb-2">
             <div className="mb-4 text-base font-medium">
