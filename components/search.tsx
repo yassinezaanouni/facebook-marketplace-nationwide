@@ -177,7 +177,7 @@ export default function Search() {
     // Handle the selected marketplace
     const marketplace =
       marketplaces[selectedMarketplace as keyof typeof marketplaces]
-    const searchURL = buildSearchURL(marketplace)
+    const searchURL = buildSearchURL(marketplace) + "&deliveryMethod=shipping"
     console.log(searchURL)
     if (device !== "Mobile") {
       if (searchThrottle) {
