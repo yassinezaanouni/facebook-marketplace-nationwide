@@ -37,6 +37,10 @@ export const siteConfig = {
         new: "New",
         used: "Used",
       },
+      mercari: {
+        new: "New",
+        used: "Used",
+      },
     },
     defaultAvailability: "in stock",
     availability: {
@@ -78,15 +82,14 @@ export const siteConfig = {
         maxPrice: "_udhi",
       },
     },
-    ebay_sold: {
-      name: "eBay (Sold)",
-      icon: "ebay.svg",
-      templateURL:
-        "https://www.ebay.com/sch/i.html?_nkw=|STRING|&LH_Sold=1&mkcid=1&mkrid=711-53200-19255-0&siteid=0&campid=5339103825&customid=&toolid=10001&mkevt=1",
+    mercari: {
+      name: "Mercari",
+      icon: "mercari.svg",
+      templateURL: "https://www.mercari.com/search/?keyword=|STRING|",
       requiresCities: false,
       searchParams: {
-        minPrice: "_udlo",
-        maxPrice: "_udhi",
+        minPrice: "priceMin",
+        maxPrice: "priceMax",
       },
     },
   },

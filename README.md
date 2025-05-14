@@ -1,6 +1,6 @@
 # FlipScoutly
 
-Search across Facebook Marketplace, Amazon, eBay, and eBay Sold listings across the USA.
+Search across Facebook Marketplace, Amazon, eBay, and Mercari listings across the USA.
 
 Visit the live site at:
 <a href="https://flipscoutly.com/" target="_blank">https://flipscoutly.com</a>

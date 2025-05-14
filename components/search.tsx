@@ -89,7 +89,7 @@ export default function Search() {
   const getEbayConditionValue = (condition: string): string => {
     const conditionMap: Record<string, string> = {
       new: "1000",
-      used: "1500|2010|2020|2030|3000",
+      used: "1500|2010|2020|2030|3000", // Combines all used conditions
     }
     return conditionMap[condition] || ""
   }
@@ -97,7 +97,15 @@ export default function Search() {
   const getAmazonConditionValue = (condition: string): string => {
     const conditionMap: Record<string, string> = {
       new: "6503240011",
-      used: "16907722011|6503242011",
+      used: "16907722011|6503242011", // Combines renewed and used
+    }
+    return conditionMap[condition] || ""
+  }
+
+  const getMercariConditionValue = (condition: string): string => {
+    const conditionMap: Record<string, string> = {
+      new: "1",
+      used: "2-4-3-5", // All used conditions: Good, Fair, Poor, and Excellent
     }
     return conditionMap[condition] || ""
   }
@@ -134,7 +142,6 @@ export default function Search() {
           const fbConditions = selectedConditions
             .map((condition) => {
               if (condition === "used") {
-                // Facebook uses these specific condition values
                 return ["used_like_new", "used_good", "used_fair"].join("%2C")
               }
               return condition
@@ -147,7 +154,6 @@ export default function Search() {
           break
 
         case "eBay":
-        case "eBay (Sold)":
           const ebayConditions = selectedConditions
             .map(getEbayConditionValue)
             .filter(Boolean)
@@ -164,6 +170,17 @@ export default function Search() {
 
           if (amazonConditions.length > 0) {
             searchURL += `&rh=n%3A21514055011%2Cp_n_condition-type%3A${amazonConditions[0]}`
+          }
+          break
+
+        case "Mercari":
+          const mercariConditions = selectedConditions
+            .map(getMercariConditionValue)
+            .filter(Boolean)
+
+          if (mercariConditions.length > 0) {
+            // Don't join with comma for Mercari since we want to preserve the dashes for used conditions
+            searchURL += `&itemConditions=${mercariConditions[0]}`
           }
           break
       }
@@ -344,7 +361,13 @@ export default function Search() {
                         alt={marketplace.name}
                         width={32}
                         height={32}
-                        className="object-contain rounded-md"
+                        className={cn(
+                          "object-contain rounded-md",
+                          // Scale up Mercari and eBay logos
+                          (marketplace.name === "Mercari" ||
+                            marketplace.name === "eBay") &&
+                            "scale-130"
+                        )}
                       />
                     </div>
                     <span className=" text-sm font-medium">
