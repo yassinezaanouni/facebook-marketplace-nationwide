@@ -115,7 +115,6 @@ export function ModeCarousel({ isCollectorMode }: ModeCarouselProps) {
         align: "start",
         loop: true,
       }}
-      className="p-2"
     >
       <CarouselContent>
         {images.map((image, index) => (

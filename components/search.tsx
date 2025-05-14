@@ -406,10 +406,8 @@ export default function Search() {
 
   return (
     <div className="space-y-6 container pt-20 pb-40">
-      <ModeCarousel isCollectorMode={isCollectorMode} />
-
       <div className="md:flex-row flex flex-col gap-6 ">
-        <div className="flex flex-col w-full">
+        <div className="flex flex-col flex-1 max-w-2xl gap-2 md:gap-4">
           {device === "Mobile" && !!resultLinks.length && (
             <div className="inline-block mb-8 text-lg">
               <div className="text-primary mb-0 font-bold">
@@ -447,7 +445,7 @@ export default function Search() {
                 </Button>
               </div>
             </div>
-            <div className="text-xs -mt-2 text-muted-foreground mb-4">
+            <div className="text-xs -mt-2 text-muted-foreground">
               <span className="font-semibold">Disclaimer:</span> This calculator
               provides rough profit estimates based on user input. Results are
               for informational purposes only and should not be considered exact
@@ -456,7 +454,7 @@ export default function Search() {
               making financial decisions.
             </div>
           </div>
-          <div className=" bg-primary/3 sm:mb-4 rounded-xl w-full p-6 mb-2">
+          <div className=" bg-primary/3  rounded-xl p-6">
             <div className="mb-4 text-base font-medium">
               Select Marketplaces
             </div>
@@ -500,7 +498,7 @@ export default function Search() {
             </div>
           </div>
 
-          <div className="bg-primary/3 sm:mb-4 rounded-xl w-full p-6 mb-2">
+          <div className="bg-primary/3  rounded-xl p-6">
             <div className="mb-4 text-base font-medium">Item Condition</div>
             <div className="md:grid-cols-4 grid grid-cols-2 gap-6">
               {getAvailableItemConditions().map(([key, label]) => (
@@ -522,7 +520,7 @@ export default function Search() {
             </div>
           </div>
 
-          <div className="bg-primary/3 sm:mb-4 sm:flex-row rounded-xl flex flex-col w-full gap-6 p-6">
+          <div className="bg-primary/3  sm:flex-row rounded-xl flex flex-col gap-6 p-6">
             <label className="flex-1">
               <span className="block mb-2 text-base font-medium">
                 Min. Price
@@ -554,10 +552,16 @@ export default function Search() {
               />
             </label>
           </div>
+
+          <ModeCarousel isCollectorMode={isCollectorMode} />
           <SubscriptionForm isCollectorMode={isCollectorMode} />
         </div>
 
-        {!isCollectorMode && <ProfitCalculator />}
+        {!isCollectorMode && (
+          <div className="flex-3">
+            <ProfitCalculator />
+          </div>
+        )}
       </div>
     </div>
   )
