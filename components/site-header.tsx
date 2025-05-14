@@ -30,9 +30,9 @@ export function SiteHeader() {
             <h4 className="md:text-md sm:text-sm text-xs font-extrabold leading-tight tracking-tighter">
               Search{" "}
               <span className="text-primary uppercase">
-                FACEBOOK<sup className="mb-8 text-[0.5em]">TM</sup> MARKETPLACE
+                Multiple Marketplaces
               </span>{" "}
-              & OTHERS nationwide!
+              with a Single Click
             </h4>
           </div>
         </div>
