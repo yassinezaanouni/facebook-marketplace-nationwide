@@ -29,6 +29,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 
+import { ModeCarousel } from "./ModeCarousel"
 import { ModeToggle } from "./ModeToggle"
 import ProfitCalculator from "./ProfitCalculator"
 import SubscriptionForm from "./SubscriptionForm"
@@ -283,168 +284,172 @@ export default function Search() {
   )
 
   return (
-    <div className="md:flex-row container flex flex-col gap-6 pt-20 pb-40">
-      <div className="flex flex-col w-full">
-        {device === "Mobile" && !!resultLinks.length && (
-          <div className="inline-block mb-8 text-lg">
-            <div className="text-primary mb-0 font-bold">
-              Results for &quot;{lastSearchTerm}&quot;
-            </div>
-            <div className="mb-2 text-sm">Search results:</div>
-            {resultLinks}
-          </div>
-        )}
-        <div className="flex flex-col gap-4">
-          <div className="flex justify-end">
-            <ModeToggle
-              isCollectorMode={isCollectorMode}
-              onModeChange={setIsCollectorMode}
-            />
-          </div>
-          <div className="flex gap-4">
-            <Input
-              id="search"
-              className="search text-primary py-6 !text-xl"
-              type="text"
-              value={searchTerm}
-              onChange={updateSearchTerm}
-              onKeyDown={handleKeyPress}
-              placeholder="Search for..."
-              autoFocus
-            />
-            <div className="flex items-center gap-2">
-              <Button
-                className="min-w-40 !h-full uppercase cursor-pointer"
-                onClick={doSearch}
-                disabled={!selectedMarketplace || !searchTerm.trim()}
-              >
-                Search
-              </Button>
-            </div>
-          </div>
-        </div>
-        <div className=" flex flex-row flex-wrap mt-4">
-          <div className="bg-primary/3 sm:mb-4 rounded-xl w-full p-6 mb-2">
-            <div className="flex mb-4  items-center gap-2 justify-between">
-              <div className="text-base font-medium">Select Marketplace</div>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <InfoIcon className="size-5 text-muted-foreground cursor-help" />
-                </TooltipTrigger>
-                <TooltipContent className="max-w-[300px] text-xs">
-                  Affiliate Disclaimer: Some of the links on this site may be
-                  affiliate links, including links to Amazon and eBay. This
-                  means I may earn a small commission if you click through and
-                  make a purchase, at no additional cost to you.
-                </TooltipContent>
-              </Tooltip>
-            </div>
-            <RadioGroup
-              value={selectedMarketplace}
-              onValueChange={updateMarketplace}
-              className="md:grid-cols-4 grid grid-cols-2 gap-4"
-            >
-              {Object.entries(marketplaces).map(([id, marketplace]) => (
-                <div key={id} className="relative">
-                  <RadioGroupItem
-                    value={id}
-                    id={`marketplace_${id}`}
-                    className="peer sr-only"
-                  />
-                  <Label
-                    htmlFor={`marketplace_${id}`}
-                    className="flex flex-col  items-center  text-center justify-center p-4 h-full rounded-lg border-2 border-muted bg-popover/50 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer transition-all"
-                  >
-                    <div className="flex items-center justify-center flex-1 mb-3">
-                      <Image
-                        src={`/marketplaces/${marketplace.icon}`}
-                        alt={marketplace.name}
-                        width={32}
-                        height={32}
-                        className={cn(
-                          "object-contain rounded-md",
-                          // Scale up Mercari and eBay logos
-                          (marketplace.name === "Mercari" ||
-                            marketplace.name === "eBay") &&
-                            "scale-130"
-                        )}
-                      />
-                    </div>
-                    <span className=" text-sm font-medium">
-                      {marketplace.name}
-                    </span>
-                  </Label>
-                </div>
-              ))}
-            </RadioGroup>
-          </div>
+    <div className="space-y-6 container pt-20 pb-40">
+      <ModeCarousel isCollectorMode={isCollectorMode} />
 
-          <div className="bg-primary/3 sm:mb-4 rounded-xl w-full p-6 mb-2">
-            <div className="mb-4 text-base font-medium">Item Condition</div>
-            <div className="md:grid-cols-4 grid grid-cols-2 gap-6">
-              {selectedMarketplace &&
-                Object.entries(
-                  siteConfig.filters.itemCondition[
-                    selectedMarketplace.replace(
-                      "_sold",
-                      ""
-                    ) as keyof typeof siteConfig.filters.itemCondition
-                  ]
-                ).map(([key, label]) => (
-                  <div key={key}>
-                    <label className="flex gap-2 cursor-pointer">
-                      <Checkbox
-                        name="condition"
-                        id={`condition_${key}`}
-                        className="w-5 h-5"
-                        onCheckedChange={(checked) =>
-                          updateConditions(key, checked as boolean)
-                        }
-                      />
-                      <span className="text-sm">{label}</span>
-                    </label>
+      <div className="md:flex-row flex flex-col gap-6 ">
+        <div className="flex flex-col w-full">
+          {device === "Mobile" && !!resultLinks.length && (
+            <div className="inline-block mb-8 text-lg">
+              <div className="text-primary mb-0 font-bold">
+                Results for &quot;{lastSearchTerm}&quot;
+              </div>
+              <div className="mb-2 text-sm">Search results:</div>
+              {resultLinks}
+            </div>
+          )}
+          <div className="flex flex-col gap-4">
+            <div className="flex justify-end">
+              <ModeToggle
+                isCollectorMode={isCollectorMode}
+                onModeChange={setIsCollectorMode}
+              />
+            </div>
+            <div className="flex gap-4">
+              <Input
+                id="search"
+                className="search text-primary py-6 !text-xl"
+                type="text"
+                value={searchTerm}
+                onChange={updateSearchTerm}
+                onKeyDown={handleKeyPress}
+                placeholder="Search for..."
+                autoFocus
+              />
+              <div className="flex items-center gap-2">
+                <Button
+                  className="min-w-40 !h-full uppercase cursor-pointer"
+                  onClick={doSearch}
+                  disabled={!selectedMarketplace || !searchTerm.trim()}
+                >
+                  Search
+                </Button>
+              </div>
+            </div>
+          </div>
+          <div className=" flex flex-row flex-wrap mt-4">
+            <div className="bg-primary/3 sm:mb-4 rounded-xl w-full p-6 mb-2">
+              <div className="flex mb-4  items-center gap-2 justify-between">
+                <div className="text-base font-medium">Select Marketplace</div>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <InfoIcon className="size-5 text-muted-foreground cursor-help" />
+                  </TooltipTrigger>
+                  <TooltipContent className="max-w-[300px] text-xs">
+                    Affiliate Disclaimer: Some of the links on this site may be
+                    affiliate links, including links to Amazon and eBay. This
+                    means I may earn a small commission if you click through and
+                    make a purchase, at no additional cost to you.
+                  </TooltipContent>
+                </Tooltip>
+              </div>
+              <RadioGroup
+                value={selectedMarketplace}
+                onValueChange={updateMarketplace}
+                className="md:grid-cols-4 grid grid-cols-2 gap-4"
+              >
+                {Object.entries(marketplaces).map(([id, marketplace]) => (
+                  <div key={id} className="relative">
+                    <RadioGroupItem
+                      value={id}
+                      id={`marketplace_${id}`}
+                      className="peer sr-only"
+                    />
+                    <Label
+                      htmlFor={`marketplace_${id}`}
+                      className="flex flex-col  items-center  text-center justify-center p-4 h-full rounded-lg border-2 border-muted bg-popover/50 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer transition-all"
+                    >
+                      <div className="flex items-center justify-center flex-1 mb-3">
+                        <Image
+                          src={`/marketplaces/${marketplace.icon}`}
+                          alt={marketplace.name}
+                          width={32}
+                          height={32}
+                          className={cn(
+                            "object-contain rounded-md",
+                            // Scale up Mercari and eBay logos
+                            (marketplace.name === "Mercari" ||
+                              marketplace.name === "eBay") &&
+                              "scale-130"
+                          )}
+                        />
+                      </div>
+                      <span className=" text-sm font-medium">
+                        {marketplace.name}
+                      </span>
+                    </Label>
                   </div>
                 ))}
+              </RadioGroup>
+            </div>
+
+            <div className="bg-primary/3 sm:mb-4 rounded-xl w-full p-6 mb-2">
+              <div className="mb-4 text-base font-medium">Item Condition</div>
+              <div className="md:grid-cols-4 grid grid-cols-2 gap-6">
+                {selectedMarketplace &&
+                  Object.entries(
+                    siteConfig.filters.itemCondition[
+                      selectedMarketplace.replace(
+                        "_sold",
+                        ""
+                      ) as keyof typeof siteConfig.filters.itemCondition
+                    ]
+                  ).map(([key, label]) => (
+                    <div key={key}>
+                      <label className="flex gap-2 cursor-pointer">
+                        <Checkbox
+                          name="condition"
+                          id={`condition_${key}`}
+                          className="w-5 h-5"
+                          onCheckedChange={(checked) =>
+                            updateConditions(key, checked as boolean)
+                          }
+                        />
+                        <span className="text-sm">{label}</span>
+                      </label>
+                    </div>
+                  ))}
+              </div>
+            </div>
+
+            <div className="bg-primary/3 sm:mb-4 sm:flex-row rounded-xl flex flex-col w-full gap-6 p-6">
+              <label className="flex-1">
+                <span className="block mb-2 text-base font-medium">
+                  Min. Price
+                </span>
+                <Input
+                  className="prices text-primary caret-secondary bg-popover h-10"
+                  id="minPrice"
+                  type="number"
+                  min="0"
+                  value={minPrice}
+                  onChange={updateMinPrice}
+                  placeholder="0"
+                  disabled={selectedMarketplace !== "facebook"}
+                />
+              </label>
+              <label className="flex-1">
+                <span className="block mb-2 text-base font-medium">
+                  Max. Price
+                </span>
+                <Input
+                  className="prices text-primary caret-secondary bg-popover h-10"
+                  id="maxPrice"
+                  type="number"
+                  min="0"
+                  value={maxPrice}
+                  onChange={updateMaxPrice}
+                  placeholder="No limit"
+                  disabled={selectedMarketplace !== "facebook"}
+                />
+              </label>
             </div>
           </div>
-
-          <div className="bg-primary/3 sm:mb-4 sm:flex-row rounded-xl flex flex-col w-full gap-6 p-6">
-            <label className="flex-1">
-              <span className="block mb-2 text-base font-medium">
-                Min. Price
-              </span>
-              <Input
-                className="prices text-primary caret-secondary bg-popover h-10"
-                id="minPrice"
-                type="number"
-                min="0"
-                value={minPrice}
-                onChange={updateMinPrice}
-                placeholder="0"
-                disabled={selectedMarketplace !== "facebook"}
-              />
-            </label>
-            <label className="flex-1">
-              <span className="block mb-2 text-base font-medium">
-                Max. Price
-              </span>
-              <Input
-                className="prices text-primary caret-secondary bg-popover h-10"
-                id="maxPrice"
-                type="number"
-                min="0"
-                value={maxPrice}
-                onChange={updateMaxPrice}
-                placeholder="No limit"
-                disabled={selectedMarketplace !== "facebook"}
-              />
-            </label>
-          </div>
+          <SubscriptionForm isCollectorMode={isCollectorMode} />
         </div>
-        <SubscriptionForm isCollectorMode={isCollectorMode} />
-      </div>
 
-      {!isCollectorMode && <ProfitCalculator />}
+        {!isCollectorMode && <ProfitCalculator />}
+      </div>
     </div>
   )
 }
