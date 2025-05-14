@@ -63,14 +63,15 @@ export const siteConfig = {
     amazon: {
       name: "Amazon",
       icon: "amazon.png",
-      templateURL: "https://www.amazon.com/s?k=|STRING|",
+      templateURL: "https://www.amazon.com/s?k=|STRING|&tag=autoreplen-20",
       requiresCities: false,
       searchParams: {},
     },
     ebay: {
       name: "eBay",
       icon: "ebay.svg",
-      templateURL: "https://www.ebay.com/sch/i.html?_nkw=|STRING|",
+      templateURL:
+        "https://www.ebay.com/sch/i.html?_nkw=|STRING|&mkcid=1&mkrid=711-53200-19255-0&siteid=0&campid=5339103825&customid=&toolid=10001&mkevt=1",
       requiresCities: false,
       searchParams: {
         minPrice: "_udlo",
@@ -80,7 +81,8 @@ export const siteConfig = {
     ebay_sold: {
       name: "eBay (Sold)",
       icon: "ebay.svg",
-      templateURL: "https://www.ebay.com/sch/i.html?_nkw=|STRING|&LH_Sold=1",
+      templateURL:
+        "https://www.ebay.com/sch/i.html?_nkw=|STRING|&LH_Sold=1&mkcid=1&mkrid=711-53200-19255-0&siteid=0&campid=5339103825&customid=&toolid=10001&mkevt=1",
       requiresCities: false,
       searchParams: {
         minPrice: "_udlo",

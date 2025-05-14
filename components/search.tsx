@@ -11,6 +11,7 @@ import {
 import Image from "next/image"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
+import { InfoIcon } from "lucide-react"
 import ReactGA from "react-ga4"
 
 import { siteConfig } from "@/config/site"
@@ -22,6 +23,11 @@ import { Button, buttonVariants } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 import { ModeToggle } from "./ModeToggle"
 import ProfitCalculator from "./ProfitCalculator"
@@ -289,7 +295,7 @@ export default function Search() {
               placeholder="Search for..."
               autoFocus
             />
-            <div>
+            <div className="flex items-center gap-2">
               <Button
                 className="min-w-40 !h-full uppercase cursor-pointer"
                 onClick={doSearch}
@@ -302,7 +308,20 @@ export default function Search() {
         </div>
         <div className=" flex flex-row flex-wrap mt-4">
           <div className="bg-primary/3 sm:mb-4 rounded-xl w-full p-6 mb-2">
-            <div className="mb-4 text-base font-medium">Select Marketplace</div>
+            <div className="flex mb-4  items-center gap-2 justify-between">
+              <div className="text-base font-medium">Select Marketplace</div>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <InfoIcon className="size-5 text-muted-foreground cursor-help" />
+                </TooltipTrigger>
+                <TooltipContent className="max-w-[300px] text-xs">
+                  Affiliate Disclaimer: Some of the links on this site may be
+                  affiliate links, including links to Amazon and eBay. This
+                  means I may earn a small commission if you click through and
+                  make a purchase, at no additional cost to you.
+                </TooltipContent>
+              </Tooltip>
+            </div>
             <RadioGroup
               value={selectedMarketplace}
               onValueChange={updateMarketplace}
