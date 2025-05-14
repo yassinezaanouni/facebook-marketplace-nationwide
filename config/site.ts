@@ -27,19 +27,14 @@ export const siteConfig = {
     itemCondition: {
       facebook: {
         new: "New",
-        used_like_new: "Used Like New",
-        used_good: "Used Good",
-        used_fair: "Used Fair",
+        used: "Used",
       },
       ebay: {
         new: "New",
-        open_box: "Open box",
-        refurbished: "Refurbished",
         used: "Used",
       },
       amazon: {
         new: "New",
-        renewed: "Renewed",
         used: "Used",
       },
     },

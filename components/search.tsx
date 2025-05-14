@@ -83,9 +83,7 @@ export default function Search() {
   const getEbayConditionValue = (condition: string): string => {
     const conditionMap: Record<string, string> = {
       new: "1000",
-      open_box: "1500",
-      refurbished: "2010|2020|2030",
-      used: "3000",
+      used: "1500|2010|2020|2030|3000",
     }
     return conditionMap[condition] || ""
   }
@@ -93,8 +91,7 @@ export default function Search() {
   const getAmazonConditionValue = (condition: string): string => {
     const conditionMap: Record<string, string> = {
       new: "6503240011",
-      renewed: "16907722011",
-      used: "6503242011",
+      used: "16907722011|6503242011",
     }
     return conditionMap[condition] || ""
   }
@@ -128,14 +125,18 @@ export default function Search() {
     if (selectedConditions.length > 0) {
       switch (marketplace.name) {
         case "Facebook Marketplace":
-          const fbConditions = selectedConditions.filter(
-            (c) =>
-              siteConfig.filters.itemCondition.facebook[
-                c as keyof typeof siteConfig.filters.itemCondition.facebook
-              ]
-          )
-          if (fbConditions.length > 0) {
-            searchURL += `&itemCondition=${fbConditions.join("%2C")}`
+          const fbConditions = selectedConditions
+            .map((condition) => {
+              if (condition === "used") {
+                // Facebook uses these specific condition values
+                return ["used_like_new", "used_good", "used_fair"].join("%2C")
+              }
+              return condition
+            })
+            .join("%2C")
+
+          if (fbConditions) {
+            searchURL += `&itemCondition=${fbConditions}`
           }
           break
 
