@@ -1,4 +1,5 @@
 import * as React from "react"
+import Link from "next/link"
 
 import { cn } from "@/lib/utils"
 import { buttonVariants } from "@/components/ui/button"
@@ -19,7 +20,11 @@ export function SiteHeader() {
             <h1 className="sm:text-m md:text-2xl xl:text-4xl text-lg font-extrabold leading-tight tracking-tighter">
               <div className="flex items-center gap-2">
                 <Icons.cart className="size-8 stroke-3 text-primary" />
-                <span className="text-primary">FlipScoutly</span>
+                <div className="flex items-center space-x-2">
+                  <Link href="/" className="flex items-center space-x-2">
+                    <span className="font-bold inline-block">FlipScoutly</span>
+                  </Link>
+                </div>
               </div>
             </h1>
             <h4 className="md:text-md sm:text-sm text-xs font-extrabold leading-tight tracking-tighter">

@@ -1,3 +1,22 @@
+# FlipScoutly
+
+Search across Facebook Marketplace, Amazon, eBay, and eBay Sold listings across the USA.
+
+Visit the live site at:
+<a href="https://flipscoutly.com/" target="_blank">https://flipscoutly.com</a>
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Features
+
+- Search across multiple marketplaces simultaneously
+- Compare prices across platforms
+- Calculate potential profits and ROI
+- Filter by condition (New/Used)
+- Set price ranges for Facebook Marketplace searches
+
 # facebook-marketplace-nationwide
 
 _Nationwide Facebook Marketplace search for the lower 48 states using the least amount of tabs possible._

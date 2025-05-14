@@ -1,5 +1,8 @@
 import "@/styles/globals.css"
+
 import { Metadata } from "next"
+import Script from "next/script"
+import dotenv from "dotenv"
 import ReactGA from "react-ga4"
 
 import { siteConfig } from "@/config/site"
@@ -7,18 +10,16 @@ import { fontSans } from "@/lib/fonts"
 import { cn } from "@/lib/utils"
 import { SiteHeader } from "@/components/site-header"
 import { ThemeProvider } from "@/components/theme-provider"
-import Script from "next/script"
-import dotenv from "dotenv"
 
 dotenv.config()
 
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  "name": siteConfig.name,
-  "description": siteConfig.description,
-  "image": siteConfig.url+"/share.jpg",
-  "url": siteConfig.url
+  name: siteConfig.name,
+  description: siteConfig.description,
+  image: siteConfig.url + "/share.jpg",
+  url: siteConfig.url,
 }
 
 export const metadata: Metadata = {
@@ -36,7 +37,7 @@ export const metadata: Metadata = {
   icons: {
     icon: "/favicon.svg",
     shortcut: "/favicon.svg",
-    apple: "/apple-touch-icon.png"
+    apple: "/apple-touch-icon.png",
   },
   metadataBase: new URL(siteConfig.url),
   openGraph: {
@@ -45,10 +46,12 @@ export const metadata: Metadata = {
     title: siteConfig.name,
     description: siteConfig.description,
     siteName: siteConfig.name,
-    images: [{
-      url: "/share.png",
-    }],
-  }
+    images: [
+      {
+        url: "/share.png",
+      },
+    ],
+  },
 }
 
 interface RootLayoutProps {
@@ -56,7 +59,7 @@ interface RootLayoutProps {
 }
 
 export default function RootLayout({ children }: RootLayoutProps) {
-  ReactGA.initialize(process.env.NEXT_PUBLIC_GA4_ANALYTICS_ID);
+  ReactGA.initialize(process.env.NEXT_PUBLIC_GA4_ANALYTICS_ID)
 
   return (
     <>
@@ -67,7 +70,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
             defer
             src={process.env.NEXT_PUBLIC_UMAMI_SCRIPT_URL}
             data-website-id={process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID}
-        ></Script>
+          ></Script>
         </head>
         <body
           className={cn(
@@ -81,7 +84,10 @@ export default function RootLayout({ children }: RootLayoutProps) {
               <div>{children}</div>
             </div>
           </ThemeProvider>
-          <script type="application/ld+json" dangerouslySetInnerHTML={{__html: JSON.stringify(jsonLd)}} />
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          />
         </body>
       </html>
     </>

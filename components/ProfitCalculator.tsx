@@ -55,15 +55,16 @@ export default function ProfitCalculator() {
         FlipScoutly Profit & ROI Calculator
       </h3>
       <div className="flex items-center gap-2 mb-6 text-muted-foreground text-xs">
-        <span>Estimated figures only</span>
+        <span>Disclaimer</span>
         <Tooltip>
           <TooltipTrigger asChild>
             <InfoIcon className="size-4 cursor-help" />
           </TooltipTrigger>
           <TooltipContent className="max-w-[300px] text-xs">
-            These calculations are for rough estimation purposes only. Actual
-            profits may vary based on various factors including shipping costs,
-            marketplace category fees, and other variables.
+            This calculator provides rough profit estimates based on user input.
+            Results are for informational purposes only and should not be
+            considered exact or guaranteed. Always verify calculations
+            independently before making financial decisions.
           </TooltipContent>
         </Tooltip>
       </div>

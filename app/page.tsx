@@ -33,28 +33,22 @@ export default function IndexPage() {
         </div>
       )}*/}
       <Search />
-      <div className="flex px-8 pb-4 mt-10">
-        <div className="w-1/3">
-          <Link href={siteConfig.links.donate} target="_blank" rel="noreferrer">
-            <div
-              className={buttonVariants({
-                size: "sm",
-                variant: "ghost",
-              })}
-            >
-              <Icons.donate className="size-5" />{" "}
-              <span className="pl-2">Support</span>
-              <span className="sr-only">Donate</span>
-            </div>
-          </Link>
-        </div>
+      <div className="flex px-8 justify-center pb-4 mt-10">
         <div className="w-1/3 text-xs italic text-center">
           All trademarks used are the property of their respective owners.{" "}
           <br className="xl:inline-block hidden" />
           Their use does not imply any affiliation nor endorsement.
-          <br />
-          <br />
-          <a
+          <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
+            <span>FlipScoutly.com</span>
+            <span>•</span>
+            <a
+              href="mailto:j.rutger82@gmail.com"
+              className="hover:text-primary transition-colors"
+            >
+              j.rutger82@gmail.com
+            </a>
+          </div>
+          {/* <a
             href="https://www.iubenda.com/privacy-policy/98350546/cookie-policy"
             className="iubenda-black iubenda-noiframe iubenda-embed"
             title="Cookie Policy "
@@ -67,20 +61,7 @@ export default function IndexPage() {
             title="Privacy Policy "
           >
             Privacy Policy
-          </a>
-        </div>
-        <div className="w-1/3 text-right">
-          <Link href={siteConfig.links.github} target="_blank" rel="noreferrer">
-            <div
-              className={buttonVariants({
-                size: "sm",
-                variant: "ghost",
-              })}
-            >
-              <Icons.gitHub className="size-5" />{" "}
-              <span className="pl-2">by @gmoz22</span>
-            </div>
-          </Link>
+          </a> */}
         </div>
       </div>
     </section>

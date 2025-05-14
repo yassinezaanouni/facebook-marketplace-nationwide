@@ -1,8 +1,8 @@
 export type SiteConfig = typeof siteConfig
 
 export const siteConfig = {
-  url: "https://www.browsemarketplaces.com",
-  name: "Browse Multiple Marketplaces Nationwide",
+  url: "https://flipscoutly.com",
+  name: "FlipScoutly",
   description:
     "Search across Facebook Marketplace, Amazon, eBay, and eBay Sold listings across the USA.",
   mainNav: [
