@@ -29,7 +29,7 @@ interface ImageInfo {
 }
 
 function parseImageInfo(filename: string, isCollector: boolean): ImageInfo {
-  const baseName = filename.split("/").pop()?.replace(".png", "") || ""
+  const baseName = filename.split("/").pop()?.replace(".webp", "") || ""
   const parts = baseName.split("_")
 
   // Remove "Title" prefix and join the product name parts
@@ -55,21 +55,21 @@ function parseImageInfo(filename: string, isCollector: boolean): ImageInfo {
 }
 
 const collectorImages = [
-  "/carousel/collector/title_technic_42126_buy_for_$75_compare_at_$160.png",
-  "/carousel/collector/title_macho_man_wwe_action_figure_buy_$28_compare_at_$75.png",
-  "/carousel/collector/title_lego_star_wars_9488_buy_$78_compare_at_$170.png",
-  "/carousel/collector/title_funko_pop_gamer_bart_buy_$25_comapre_at_$50.png",
-  "/carousel/collector/title_carl_grimes_action_figure_buy_$75_compare_at_$120.png",
-  "/carousel/collector/title_barbie_cher_vintage_buy_$180_compare_at_$350.png",
+  "/carousel/collector/title_technic_42126_buy_for_$75_compare_at_$160.webp",
+  "/carousel/collector/title_macho_man_wwe_action_figure_buy_$28_compare_at_$75.webp",
+  "/carousel/collector/title_lego_star_wars_9488_buy_$78_compare_at_$170.webp",
+  "/carousel/collector/title_funko_pop_gamer_bart_buy_$25_comapre_at_$50.webp",
+  "/carousel/collector/title_carl_grimes_action_figure_buy_$75_compare_at_$120.webp",
+  "/carousel/collector/title_barbie_cher_vintage_buy_$180_compare_at_$350.webp",
 ].map((img) => parseImageInfo(img, true))
 
 const flipperImages = [
-  "/carousel/flipper/title_radica_poker_vintage_game_buy_$30_sell_$65.png",
-  "/carousel/flipper/title_panasonic_cassette_player_buy_$125_sell_$215.png",
-  "/carousel/flipper/title_logiteh_650_harmony_buy_$130_sell_$290.png",
-  "/carousel/flipper/title_i_love_lucy_dvd_buy_$22_sell_$52.png",
-  "/carousel/flipper/title_canon_ powershot_sd750_buy_$55_sell_$180.png",
-  "/carousel/flipper/title_brunswick_pro_bowling_ps4_buy_$23_sell_$65.png",
+  "/carousel/flipper/title_radica_poker_vintage_game_buy_$30_sell_$65.webp",
+  "/carousel/flipper/title_panasonic_cassette_player_buy_$125_sell_$215.webp",
+  "/carousel/flipper/title_logiteh_650_harmony_buy_$130_sell_$290.webp",
+  "/carousel/flipper/title_i_love_lucy_dvd_buy_$22_sell_$52.webp",
+  "/carousel/flipper/title_canon_ powershot_sd750_buy_$55_sell_$180.webp",
+  "/carousel/flipper/title_brunswick_pro_bowling_ps4_buy_$23_sell_$65.webp",
 ].map((img) => parseImageInfo(img, false))
 
 export function ModeCarousel({ isCollectorMode }: ModeCarouselProps) {
