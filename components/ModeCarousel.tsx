@@ -110,57 +110,65 @@ export function ModeCarousel({ isCollectorMode }: ModeCarouselProps) {
   const images = isCollectorMode ? collectorImages : flipperImages
 
   return (
-    <Carousel
-      opts={{
-        align: "start",
-        loop: true,
-      }}
-    >
-      <CarouselContent>
-        {images.map((image, index) => (
-          <CarouselItem key={index} className="basis-1/2 lg:basis-1/3">
-            <Card className="border-none bg-primary/3 gap-0 py-3 h-full">
-              <CardHeader className="p-0">
-                <div className="overflow-hidden rounded-t-xl">
-                  <Image
-                    src={image.src}
-                    alt={image.title}
-                    width={300}
-                    height={125}
-                    className="object-contain max-h-[150px]"
-                    priority={index < 3}
-                  />
-                </div>
-              </CardHeader>
-              <CardContent className="p-3">
-                <CardTitle className="text-sm line-clamp-1">
-                  {image.title}
-                </CardTitle>
-                <div className="flex justify-between items-center mt-2">
-                  <div>
-                    <span className="text-xs text-muted-foreground">
-                      Buy for
-                    </span>
-                    <span className="text-base font-semibold ml-1">
-                      ${image.buyPrice}
-                    </span>
+    <div className="mt-4">
+      <h3 className="text-xl md:text-2xl mb-2 font-semibold">
+        {isCollectorMode
+          ? "Compare Market Prices"
+          : "Potential Flips Based on Real Market Prices"}
+      </h3>
+      <Carousel
+        opts={{
+          align: "start",
+          loop: true,
+        }}
+        className=" relative"
+      >
+        <CarouselContent>
+          {images.map((image, index) => (
+            <CarouselItem key={index} className="basis-1/2 lg:basis-1/3">
+              <Card className="border-none bg-primary/3 gap-0 py-3 h-full">
+                <CardHeader className="p-0">
+                  <div className="overflow-hidden rounded-t-xl">
+                    <Image
+                      src={image.src}
+                      alt={image.title}
+                      width={300}
+                      height={125}
+                      className="object-contain max-h-[150px]"
+                      priority={index < 3}
+                    />
                   </div>
-                  <div className="text-right">
-                    <span className="text-xs text-muted-foreground">
-                      {isCollectorMode ? "Compare at" : "Sell for"}
-                    </span>
-                    <span className="text-lg font-semibold text-primary ml-1">
-                      ${image.sellPrice}
-                    </span>
+                </CardHeader>
+                <CardContent className="p-3">
+                  <CardTitle className="text-sm line-clamp-1">
+                    {image.title}
+                  </CardTitle>
+                  <div className="flex justify-between items-center mt-2">
+                    <div>
+                      <span className="text-xs text-muted-foreground">
+                        Buy for
+                      </span>
+                      <span className="text-base font-semibold ml-1">
+                        ${image.buyPrice}
+                      </span>
+                    </div>
+                    <div className="text-right">
+                      <span className="text-xs text-muted-foreground">
+                        {isCollectorMode ? "Compare at" : "Sell for"}
+                      </span>
+                      <span className="text-lg font-semibold text-primary ml-1">
+                        ${image.sellPrice}
+                      </span>
+                    </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
-          </CarouselItem>
-        ))}
-      </CarouselContent>
-      <CarouselPrevious className="left-0 -translate-x-1/2" />
-      <CarouselNext className="right-0 translate-x-1/2" />
-    </Carousel>
+                </CardContent>
+              </Card>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <CarouselPrevious className="left-0 -translate-x-1/2" />
+        <CarouselNext className="right-0 translate-x-1/2" />
+      </Carousel>
+    </div>
   )
 }
