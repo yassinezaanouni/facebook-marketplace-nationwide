@@ -451,12 +451,11 @@ export default function Search() {
               </div>
             </div>
             <div className="text-xs -mt-2 text-muted-foreground">
-              <span className="font-semibold">Disclaimer:</span> This calculator
-              provides rough profit estimates based on user input. Results are
-              for informational purposes only and should not be considered exact
-              or guaranteed. Always verify calculations independently before
-              making financial decisions. calculations independently before
-              making financial decisions.
+              <span className="font-semibold">Disclaimer:</span> Some of the
+              links on this site may be affiliate links, including links to
+              Amazon and eBay. This means FlipScoutly may earn a small
+              commission if you click through and make a purchase, at no
+              additional cost to you.
             </div>
           </div>
           <div className=" bg-primary/3  rounded-xl p-6">
