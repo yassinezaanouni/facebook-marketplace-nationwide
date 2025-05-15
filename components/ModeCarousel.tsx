@@ -159,8 +159,8 @@ export function ModeCarousel({ isCollectorMode }: ModeCarouselProps) {
           </CarouselItem>
         ))}
       </CarouselContent>
-      <CarouselPrevious />
-      <CarouselNext />
+      <CarouselPrevious className="left-0 -translate-x-1/2" />
+      <CarouselNext className="right-0 translate-x-1/2" />
     </Carousel>
   )
 }
