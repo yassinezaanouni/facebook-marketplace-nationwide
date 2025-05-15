@@ -87,10 +87,7 @@ export const siteConfig = {
       icon: "mercari.svg",
       templateURL: "https://www.mercari.com/search/?keyword=|STRING|",
       requiresCities: false,
-      searchParams: {
-        minPrice: "priceMin",
-        maxPrice: "priceMax",
-      },
+      searchParams: {},
     },
   },
 }

@@ -202,6 +202,14 @@ export default function Search() {
       if (maxPrice) {
         searchURL += `&maxPrice=${maxPrice}`
       }
+    } else if (marketplace.name === "Mercari") {
+      // Convert dollar prices to cents for Mercari
+      if (minPrice) {
+        searchURL += `&minPrice=${Math.round(parseFloat(minPrice) * 100)}`
+      }
+      if (maxPrice) {
+        searchURL += `&maxPrice=${Math.round(parseFloat(maxPrice) * 100)}`
+      }
     } else {
       if (minPrice && marketplace.searchParams.minPrice) {
         searchURL += `&${marketplace.searchParams.minPrice}=${minPrice}`
