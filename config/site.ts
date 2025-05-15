@@ -56,7 +56,7 @@ export const siteConfig = {
       name: "Facebook Marketplace",
       icon: "facebook.svg",
       templateURL:
-        "https://www.facebook.com/marketplace/search?query=|STRING|&exact=false&radius=805",
+        "https://www.facebook.com/marketplace/search?query=|STRING|&exact=false&radius=805&deliveryMethod=shipping",
       searchParams: {
         sortBy: "best_match",
         availability: "in stock",

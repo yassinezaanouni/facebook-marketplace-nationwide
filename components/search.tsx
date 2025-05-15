@@ -250,17 +250,6 @@ export default function Search() {
           break
 
         case "Amazon":
-          const amazonConditions = selectedConditions
-            .map((condition) => {
-              if (condition === "new") return "6503240011"
-              if (condition === "used") return "16907722011|6503242011" // Include both renewed and used conditions
-              return ""
-            })
-            .filter(Boolean)
-
-          if (amazonConditions.length > 0) {
-            searchURL += `&rh=n%3A21514055011%2Cp_n_condition-type%3A${amazonConditions[0]}`
-          }
           break
 
         case "Mercari":
