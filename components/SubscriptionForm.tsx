@@ -34,11 +34,14 @@ export default function SubscriptionForm({
     <Card className="bg-primary/3 w-full shadow-none">
       <CardHeader className="space-y-2">
         <CardTitle className="text-2xl font-bold">
-          Didn't Find What You Were Looking For?
+          {isCollectorMode
+            ? "Didn't Find What You Were Looking For?"
+            : "Want to learn more about how you can find profitable items?"}
         </CardTitle>
         <CardDescription className="text-base">
-          Tell us what you're looking for and your desired price range — we'll
-          send you an email alert if we find a match.
+          {isCollectorMode
+            ? "Tell us what you're looking for and your desired price range — we'll send you an email alert if we find a match."
+            : "Want to learn more about how you can find profitable items to flip for profit? Subscribe and receive a free e-book packed full of everything you need to know."}
         </CardDescription>
       </CardHeader>
       <CardContent>
